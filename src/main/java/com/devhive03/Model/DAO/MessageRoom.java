@@ -5,33 +5,33 @@ import jakarta.persistence.*;
 import java.security.Timestamp;
 
 @Entity
-@Table(name = "MessageRooms")
+@Table(name = "messagerooms")
 public class MessageRoom {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
+    @Column(name = "messageroom_id", nullable = false)
     private Integer roomID;
 
-    @Column(nullable = false)
-    private Integer buyerID;
+
+    @ManyToOne
+    @JoinColumn(name = "buyer_id", nullable = false)
+    private User buyer;
+
 
     @Column(nullable = false)
     private Integer postID;
 
-    @Column(nullable = false)
-    private Integer writerID;
-
-    @Column
+    @Column(name = "last_message_id")
     private String lastMessageID;
 
-    @Column
+    @Column(name = "last_message_date")
     private Timestamp lastMessageDate;
 
-    @Column
+    @Column(name = "state")
     private Integer state;
 
-    @Column
+    @Column(name = "confirmation_status")
     private Integer confirmationStatus;
 
     // Getters and Setters

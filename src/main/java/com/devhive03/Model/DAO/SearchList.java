@@ -13,8 +13,9 @@ public class SearchList {
     @Column(nullable = false)
     private Integer searchData;
 
-    @Column(nullable = false)
-    private Integer searchUserID;
+    @ManyToOne
+    @JoinColumn(name = "search_user_id", nullable = false)
+    private User searchUserID;
 
     private Timestamp searchDate;
 

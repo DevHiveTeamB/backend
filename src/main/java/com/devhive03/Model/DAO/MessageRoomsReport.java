@@ -5,30 +5,25 @@ import jakarta.persistence.*;
 import java.security.Timestamp;
 
 @Entity
-@Table(name = "MessageRoomsReports")
-public class MessageRoomsReport {
+@Table(name = "messageroom_reports")
+public class MessageRoomsReport { //나중에 s뺴줘
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
+    @Column(name = "report_id", nullable = false)
     private Integer reportID;
 
-    @Column(nullable = false)
-    private Integer reporterUserID;
+    @ManyToOne
+    @JoinColumn(name = "reporter_user_id", nullable = false)
+    private User reporterUserID;
 
-    @Column(nullable = false)
+    @Column(name = "reportedMessageRooms_ID", nullable = false)
     private Integer reportedMessageRoomsID;
 
-    @Column(nullable = false)
-    private Integer postID;
-
-    @Column(nullable = false)
-    private Integer writerID;
-
-    @Column
+    @Column(name = "report_content")
     private String reportContent;
 
-    @Column
+    @Column(name = "report_date")
     private Timestamp reportDate;
 
     // Getters and Setters

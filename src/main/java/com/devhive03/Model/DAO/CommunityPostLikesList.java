@@ -11,8 +11,9 @@ public class CommunityPostLikesList {
     @Column(nullable = false)
     private Integer likeCommunityPostID;
 
-    @Column(nullable = false)
-    private Integer likeUserID;
+    @ManyToOne
+    @JoinColumn(name = "like_user_id", nullable = false)
+    private User likeUserID;
 
     @Column(nullable = false)
     private Integer likedCommunityPost;

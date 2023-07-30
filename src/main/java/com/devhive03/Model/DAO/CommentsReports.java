@@ -16,8 +16,9 @@ public class CommentsReports {
     @Column(nullable = false)
     private Integer commentsID;
 
-    @Column(nullable = false)
-    private Integer raportUserID;
+    @ManyToOne
+    @JoinColumn(name = "reporter_user_id", nullable = false)
+    private User raporterUserID;
 
     @Column
     private String reportContent;

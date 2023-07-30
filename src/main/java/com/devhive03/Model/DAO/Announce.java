@@ -2,7 +2,7 @@ package com.devhive03.Model.DAO;
 
 import jakarta.persistence.*;
 
-import java.util.Date;
+import java.security.Timestamp;
 
 @Entity
 @Table(name = "Announce")
@@ -10,7 +10,7 @@ public class Announce {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
+    @Column(name = "announce_id", nullable = false)
     private Integer announceID;
 
     @Column
@@ -19,8 +19,7 @@ public class Announce {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date date;
+    private Timestamp date;
 
     // Getters and Setters
 }

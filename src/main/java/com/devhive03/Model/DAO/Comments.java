@@ -2,6 +2,7 @@ package com.devhive03.Model.DAO;
 
 import jakarta.persistence.*;
 
+import java.security.Timestamp;
 import java.util.Date;
 
 @Entity
@@ -10,11 +11,12 @@ public class Comments {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
+    @Column(name = "comment_id", nullable = false)
     private Integer commentsID;
 
-    @Column(nullable = false)
-    private Integer userID;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User userID;
 
     @Column(nullable = false)
     private Integer communityPostID;
@@ -22,8 +24,7 @@ public class Comments {
     @Column
     private String commentContent;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date commentDate;
+    private Timestamp commentDate;
 
     @Column
     private Integer commentLikes;

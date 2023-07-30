@@ -13,8 +13,10 @@ public class PostReports {
     @Column(nullable = false)
     private Integer reportID;
 
-    @Column(nullable = false)
-    private Integer reportUserID;
+    @ManyToOne
+    @JoinColumn(name= "report_user_id", nullable = false)
+    private User reportUserID;
+
 
     @Column(nullable = false)
     private Integer postID;

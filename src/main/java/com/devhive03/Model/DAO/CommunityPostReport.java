@@ -13,8 +13,9 @@ public class CommunityPostReport {
     @Column(name = "ReportID", nullable = false)
     private int reportID;
 
-    @Column(name = "ReporterUserID", nullable = false)
-    private int reporterUserID;
+    @ManyToOne
+    @JoinColumn(name = "reporter_user_id", nullable = false)
+    private User reporterUserID;
 
     @Column(name = "CommunityPostID", nullable = false)
     private int communityPostID;

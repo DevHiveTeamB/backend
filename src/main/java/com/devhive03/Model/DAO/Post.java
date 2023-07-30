@@ -2,38 +2,38 @@ package com.devhive03.Model.DAO;
 
 import jakarta.persistence.*;
 
-import java.util.Date;
+import java.security.Timestamp;
 
 @Entity
-@Table(name = "Posts")
+@Table(name = "posts")
 public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
+    @Column(name = "post_id", nullable = false)
     private Integer postID;
 
-    @Column(nullable = false)
+    @Column(name = "lecture_id", nullable = false)
     private Integer lectureID;
 
-    @Column(nullable = false)
-    private Integer writerID;
+    @ManyToOne
+    @JoinColumn(name = "writer_id", nullable = false)
+    private User writer;
 
-    @Column
+    @Column(name = "post_title", nullable = false)
     private String postTitle;
 
     @Lob
-    @Column
+    @Column(name = "post_content", nullable = false)
     private String postContent;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column
-    private Date postDate;
+    @Column(name = "post_date", nullable = false)
+    private Timestamp postDate;
 
-    @Column
+    @Column(name = "price", nullable = false)
     private Integer price;
 
-    @Column
+    @Column(name = "hits")
     private Integer hits;
 
     // Getters and Setters

@@ -11,11 +11,13 @@ public class PostLikesList {
     @Column(nullable = false)
     private Integer postLikeID;
 
+
     @Column(nullable = false)
     private Integer likedPostID;
 
-    @Column(nullable = false)
-    private Integer likePostUserID;
+    @ManyToOne
+    @JoinColumn(name = "like_post_user_id", nullable = false)
+    private User likePostUserID;
 
     // Getters and Setters
 }

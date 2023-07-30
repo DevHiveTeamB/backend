@@ -13,8 +13,9 @@ public class Favorites {
     @Column(nullable = false)
     private Integer favoriteID;
 
-    @Column(nullable = false)
-    private Integer userID;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User userID;
 
     @Column(nullable = false)
     private Integer postID;

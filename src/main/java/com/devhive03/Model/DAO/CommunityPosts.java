@@ -13,8 +13,9 @@ public class CommunityPosts {
     @Column(nullable = false)
     private Integer communityPostID;
 
-    @Column(nullable = false)
-    private Integer writerID;
+    @ManyToOne
+    @JoinColumn(name = "writer_id", nullable = false)
+    private User writerID;
 
     @Column
     private String communityPostTitle;
