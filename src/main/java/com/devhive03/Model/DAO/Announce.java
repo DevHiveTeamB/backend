@@ -11,7 +11,7 @@ public class Announce {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "announce_id", nullable = false)
-    private Integer announceID;
+    private Long announceID;
 
     @Column(name = "title")
     private String title;

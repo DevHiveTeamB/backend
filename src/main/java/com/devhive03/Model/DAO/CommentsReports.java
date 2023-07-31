@@ -12,7 +12,7 @@ public class CommentsReports {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "report_id", nullable = false)
-    private Integer reportID;
+    private Long reportID;
 
     @ManyToOne
     @JoinColumn(name = "comments_id", nullable = false)

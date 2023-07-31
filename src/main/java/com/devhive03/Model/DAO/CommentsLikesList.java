@@ -9,7 +9,7 @@ public class CommentsLikesList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "favorite_comments_ic", nullable = false)
-    private Integer likeCommentsID;
+    private Long likeCommentsID;
 
     @ManyToOne
     @JoinColumn(name = "comments_id", nullable = false)

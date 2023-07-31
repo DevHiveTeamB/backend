@@ -9,7 +9,7 @@ public class CommunityPostspicture {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "communityposts_picture_id", nullable = false)
-    private Integer communityPostspictureID;
+    private Long communityPostspictureID;
 
     @ManyToOne
     @JoinColumn(name = "communitypost_id", nullable = false)

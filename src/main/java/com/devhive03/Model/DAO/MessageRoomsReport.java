@@ -11,7 +11,7 @@ public class MessageRoomsReport { //나중에 s뺴줘
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "report_id", nullable = false)
-    private Integer reportID;
+    private Long reportID;
 
     @ManyToOne
     @JoinColumn(name = "reporter_user_id", nullable = false)

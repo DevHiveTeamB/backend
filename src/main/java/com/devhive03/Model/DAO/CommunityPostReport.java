@@ -11,7 +11,7 @@ public class CommunityPostReport {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Report_id", nullable = false)
-    private int reportID;
+    private Long reportID;
 
     @ManyToOne
     @JoinColumn(name = "reporter_user_id", nullable = false)
