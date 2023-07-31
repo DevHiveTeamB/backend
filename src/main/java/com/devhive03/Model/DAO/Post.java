@@ -13,7 +13,7 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id", nullable = false)
-    private Integer postID;
+    private Long postID;
 
     @ManyToOne
     @JoinColumn(name = "lecture_id", nullable = false)

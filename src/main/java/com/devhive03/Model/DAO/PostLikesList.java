@@ -9,7 +9,7 @@ public class PostLikesList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "postlike_id", nullable = false)
-    private Integer likePostID;
+    private Long likePostID;
 
     @ManyToOne
     @JoinColumn(name = "post_id", nullable = false)

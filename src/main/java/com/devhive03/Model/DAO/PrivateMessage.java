@@ -12,7 +12,7 @@ public class PrivateMessage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "message_id", nullable = false)
-    private Integer messageID;
+    private Long messageID;
 
     @ManyToOne
     @JoinColumn(name = "messagerooms_id", nullable = false)

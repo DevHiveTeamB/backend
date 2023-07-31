@@ -13,7 +13,7 @@ public class MessageRoom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "messageroom_id", nullable = false)
-    private Integer roomID;
+    private Long roomID;
 
     @ManyToOne
     @JoinColumn(name = "buyer_id", nullable = false)
