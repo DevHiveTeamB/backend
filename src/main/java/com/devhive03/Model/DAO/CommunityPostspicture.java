@@ -3,7 +3,7 @@ package com.devhive03.Model.DAO;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "Communityposts_picture")
+@Table(name = "communityposts_picture")
 public class CommunityPostspicture {
 
     @Id

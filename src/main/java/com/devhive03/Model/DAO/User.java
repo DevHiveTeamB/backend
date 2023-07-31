@@ -44,59 +44,59 @@ public class User {
     private Byte ratingState;
 
     //게시글 연관관계
-    @OneToMany(mappedBy = "users")
+    @OneToMany(mappedBy = "writer")
     private List<Post> posts = new ArrayList<>();
 
     //쪽지방 연관관계
-    @OneToMany(mappedBy = "users")
+    @OneToMany(mappedBy = "buyer")
     private List<MessageRoom> messageRooms = new ArrayList<>();
 
     //쪽지방 신고 연관관계
-    @OneToMany(mappedBy = "users")
+    @OneToMany(mappedBy = "user")
     private List<MessageRoomsReport> messageRoomsReports = new ArrayList<>();
 
     //게시글 좋아요 목록 연관관계
-    @OneToMany(mappedBy = "users")
+    @OneToMany(mappedBy = "user")
     private List<PostLikesList> postLikesLists = new ArrayList<>();
 
     //게시글 찜 목록 연관관계
-    @OneToMany(mappedBy = "users")
+    @OneToMany(mappedBy = "user")
     private List<Favorites> favorites = new ArrayList<>();
 
     //게시글 신고 연관관계
-    @OneToMany(mappedBy = "users")
+    @OneToMany(mappedBy = "user")
     private List<PostReports> postReports = new ArrayList<>();
 
     //최근검색 목록 연관관계
-    @OneToMany(mappedBy = "users")
+    @OneToMany(mappedBy = "user")
     private List<SearchList> searchLists = new ArrayList<>();
 
     //커뮤니티 좋아요 목록 연관관계
-    @OneToMany(mappedBy = "users")
+    @OneToMany(mappedBy = "user")
     private List<CommunityPostLikesList> communityPostLikesLists = new ArrayList<>();
 
     //커뮤니티 게시글 연관관계
-    @OneToMany(mappedBy = "users")
+    @OneToMany(mappedBy = "writer")
     private List<CommunityPosts> communityPosts = new ArrayList<>();
 
     //커뮤니티 게시글 신고 연관관계
-    @OneToMany(mappedBy = "users")
+    @OneToMany(mappedBy = "user")
     private List<CommunityPostReport> communityPostReports = new ArrayList<>();
 
     //댓글 연관관계
-    @OneToMany(mappedBy = "users")
+    @OneToMany(mappedBy = "user")
     private List<Comments> comments = new ArrayList<>();
 
     //댓글 좋아요 목록 연관관계
-    @OneToMany(mappedBy = "users")
+    @OneToMany(mappedBy = "user")
     private List<CommentsLikesList> commentsLikesLists = new ArrayList<>();
 
     //댓글 신고 목록 연관관계
-    @OneToMany(mappedBy = "users")
+    @OneToMany(mappedBy = "user")
     private List<CommentsReports> commentsReports = new ArrayList<>();
 
     //개인 쪽지 연관관계
-    @OneToMany(mappedBy = "users")
+    @OneToMany(mappedBy = "MessageWriter")
     private List<PrivateMessage> privateMessages = new ArrayList<>();
 
     // getters and setters

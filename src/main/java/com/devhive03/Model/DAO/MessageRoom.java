@@ -36,11 +36,11 @@ public class MessageRoom {
     private Integer confirmationStatus;
 
     //쪽지방 신고 연관관계
-    @OneToOne(mappedBy = "messagerooms")
+    @OneToOne(mappedBy = "reportedMessageRooms")
     private MessageRoomsReport messageRoomsReport;
 
     //개인쪽지 연관관계
-    @OneToMany(mappedBy = "messagerooms")
+    @OneToMany(mappedBy = "messageRooms")
     private List<PrivateMessage> privateMessages = new ArrayList<>();
 
     // Getters and Setters

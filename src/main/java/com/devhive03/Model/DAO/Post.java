@@ -40,23 +40,23 @@ public class Post {
     private Integer hits;
 
     //쪽지방 연관관계
-    @OneToOne(mappedBy = "posts")
+    @OneToOne(mappedBy = "post")
     private MessageRoom messageRoom;
 
     //게시글 사진 연관관계
-    @OneToMany(mappedBy = "posts")
+    @OneToMany(mappedBy = "post")
     private List<PostPicture> postPictures = new ArrayList<>();
 
     //게시글 신고 연관관계
-    @OneToMany(mappedBy = "posts")
+    @OneToMany(mappedBy = "post")
     private List<PostReports> postReports = new ArrayList<>();
 
     //계시글 좋아요 목록 연관관계
-    @OneToMany(mappedBy = "posts")
+    @OneToMany(mappedBy = "post")
     private List<PostLikesList> postLikesLists = new ArrayList<>();
 
     //게시글 찜 연관관계
-    @OneToMany(mappedBy = "posts")
+    @OneToMany(mappedBy = "post")
     private List<Favorites> favorites = new ArrayList<>();
     // Getters and Setters
 }

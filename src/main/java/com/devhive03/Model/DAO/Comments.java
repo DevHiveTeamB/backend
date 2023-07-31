@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 
 import java.security.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -22,7 +21,7 @@ public class Comments {
 
     @ManyToOne
     @JoinColumn(name = "communitypost_id", nullable = false)
-    private CommunityPosts communityPost;
+    private CommunityPosts communityPosts;
 
     @Column(name = "comment_content")
     private String commentContent;

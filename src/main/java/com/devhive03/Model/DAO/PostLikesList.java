@@ -17,7 +17,7 @@ public class PostLikesList {
 
     @ManyToOne
     @JoinColumn(name = "like_post_user_id", nullable = false)
-    private User likePostUser;
+    private User user;
 
     // Getters and Setters
 }
