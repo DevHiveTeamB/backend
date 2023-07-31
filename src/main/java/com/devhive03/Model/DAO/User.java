@@ -94,8 +94,11 @@ public class User {
     //댓글 신고 목록 연관관계
     @OneToMany(mappedBy = "users")
     private List<CommentsReports> commentsReports = new ArrayList<>();
-    
-    //테스트
+
+    //개인 쪽지 연관관계
+    @OneToMany(mappedBy = "users")
+    private List<PrivateMessage> privateMessages = new ArrayList<>();
+
     // getters and setters
 
     // You can add @PrePersist and @PreUpdate methods if you want to automatically hash the password, for example.

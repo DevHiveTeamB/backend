@@ -2,23 +2,30 @@ package com.devhive03.Model.DAO;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
-@Table(name = "Lectures")
+@Table(name = "lectures")
 public class Lecture {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
+    @Column(name = "lecture_id", nullable = false)
     private Integer lectureID;
 
-    @Column
+    @Column(name = "lecture_name", nullable = false, length = 50)
     private String lectureName;
 
-    @Column
+    @Column(name = "professor_name", length = 50)
     private String professorName;
 
-    @Column
+    @Column(name = "major", nullable = false, length = 50)
     private String major;
+
+    //게시글 연관관계
+    @OneToMany(mappedBy = "lectures")
+    private List<Post> posts = new ArrayList<>();
 
     // Getters and Setters
 }

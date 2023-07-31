@@ -5,21 +5,23 @@ import jakarta.persistence.*;
 import java.security.Timestamp;
 
 @Entity
-@Table(name = "Favorites")
+@Table(name = "favorites")
 public class Favorites {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
+    @Column(name = "favorite_id", nullable = false)
     private Integer favoriteID;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User userID;
+    private User user;
 
-    @Column(nullable = false)
-    private Integer postID;
+    @ManyToOne
+    @JoinColumn(name = "post_id", nullable = false)
+    private Post post;
 
+    @Column(name = "favorite_date")
     private Timestamp favoriteDate;
 
     // Getters and Setters

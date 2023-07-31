@@ -3,21 +3,20 @@ package com.devhive03.Model.DAO;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "CommunityPostspicture")
+@Table(name = "Communityposts_picture")
 public class CommunityPostspicture {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
+    @Column(name = "communityposts_picture_id", nullable = false)
     private Integer communityPostspictureID;
 
-    @Column(nullable = false)
-    private Integer communityPostID;
+    @ManyToOne
+    @JoinColumn(name = "communitypost_id", nullable = false)
+    private CommunityPosts communityPost;
 
-    @Column(nullable = false)
-    private Integer writerID;
-
-    @Column
+    @Lob
+    @Column(name = "picture")
     private String picture;
 
     // Getters and Setters

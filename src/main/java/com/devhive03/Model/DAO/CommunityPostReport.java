@@ -5,20 +5,21 @@ import jakarta.persistence.*;
 import java.security.Timestamp;
 
 @Entity
-@Table(name = "CommunityPostReports")
+@Table(name = "Communitypost_reports")
 public class CommunityPostReport {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ReportID", nullable = false)
+    @Column(name = "Report_id", nullable = false)
     private int reportID;
 
     @ManyToOne
     @JoinColumn(name = "reporter_user_id", nullable = false)
-    private User reporterUserID;
+    private User reporterUser;
 
-    @Column(name = "CommunityPostID", nullable = false)
-    private int communityPostID;
+    @ManyToOne
+    @JoinColumn(name = "Communitypost_id", nullable = false)
+    private CommunityPosts communityPost;
 
     @Column(name = "ReportContent")
     private String reportContent;

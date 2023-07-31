@@ -3,7 +3,7 @@ package com.devhive03.Model.DAO;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "CommunityPostLikesList")
+@Table(name = "Communitypost_likes_list")
 public class CommunityPostLikesList {
 
     @Id
@@ -15,8 +15,9 @@ public class CommunityPostLikesList {
     @JoinColumn(name = "like_user_id", nullable = false)
     private User likeUserID;
 
-    @Column(nullable = false)
-    private Integer likedCommunityPost;
+    @ManyToOne
+    @JoinColumn(name = "liked_communitypost", nullable = false)
+    private CommunityPosts likedCommunityPost;
 
     // Getters and Setters
 }

@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.security.Timestamp;
 
 @Entity
-@Table(name = "Announce")
+@Table(name = "announce")
 public class Announce {
 
     @Id
@@ -13,12 +13,13 @@ public class Announce {
     @Column(name = "announce_id", nullable = false)
     private Integer announceID;
 
-    @Column
+    @Column(name = "title")
     private String title;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "content", columnDefinition = "TEXT")
     private String content;
 
+    @Column(name = "data")
     private Timestamp date;
 
     // Getters and Setters
