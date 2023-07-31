@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.security.Timestamp;
 
 @Entity
-@Table(name = "Communitypost_reports")
+@Table(name = "communitypost_reports")
 public class CommunityPostReport {
 
     @Id
@@ -15,7 +15,7 @@ public class CommunityPostReport {
 
     @ManyToOne
     @JoinColumn(name = "reporter_user_id", nullable = false)
-    private User reporterUser;
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "Communitypost_id", nullable = false)

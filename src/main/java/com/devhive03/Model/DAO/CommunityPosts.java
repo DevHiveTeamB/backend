@@ -33,19 +33,19 @@ public class CommunityPosts {
     private Integer communityPostLikes;
 
     //커뮤니티 글 사진 연관관계
-    @OneToMany(mappedBy = "communityposts")
+    @OneToMany(mappedBy = "communityPost")
     private List<CommunityPostspicture> communityPostspictures = new ArrayList<>();
 
     //커뮤니티 글 신고 연관관계
-    @OneToMany(mappedBy = "communityposts")
+    @OneToMany(mappedBy = "communityPost")
     private List<CommunityPostReport> communityPostReports = new ArrayList<>();
 
     //커뮤니티 글 좋아요 목록 연관관계
-    @OneToMany(mappedBy = "communityposts")
+    @OneToMany(mappedBy = "likedCommunityPost")
     private List<CommunityPostLikesList> communityPostLikesLists = new ArrayList<>();
 
     //커뮤니티 글 댓글 연관관계
-    @OneToMany(mappedBy = "communityposts")
+    @OneToMany(mappedBy = "communityPosts")
     private List<Comments> comments = new ArrayList<>();
 
     // Getters and Setters

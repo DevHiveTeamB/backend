@@ -6,7 +6,7 @@ import java.security.Timestamp;
 import java.util.Date;
 
 @Entity
-@Table(name = "Comments_reports")
+@Table(name = "comments_reports")
 public class CommentsReports {
 
     @Id
@@ -20,7 +20,7 @@ public class CommentsReports {
 
     @ManyToOne
     @JoinColumn(name = "reporter_user_id", nullable = false)
-    private User raporterUserID;
+    private User user;
 
     @Column(name = "report_content")
     private String reportContent;

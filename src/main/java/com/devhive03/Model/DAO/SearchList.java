@@ -14,7 +14,7 @@ public class SearchList {
 
     @ManyToOne
     @JoinColumn(name = "search_user_id", nullable = false)
-    private User searchUser;
+    private User user;
 
     @Column(name = "search_date")
     private Timestamp searchDate;

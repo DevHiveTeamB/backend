@@ -15,7 +15,7 @@ public class PostReports {
 
     @ManyToOne
     @JoinColumn(name= "report_user_id", nullable = false)
-    private User reportUser;
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "post_id", nullable = false)

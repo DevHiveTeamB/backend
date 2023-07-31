@@ -24,7 +24,7 @@ public class Lecture {
     private String major;
 
     //게시글 연관관계
-    @OneToMany(mappedBy = "lectures")
+    @OneToMany(mappedBy = "lecture")
     private List<Post> posts = new ArrayList<>();
 
     // Getters and Setters
