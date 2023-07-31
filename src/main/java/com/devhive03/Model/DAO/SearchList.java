@@ -9,14 +9,14 @@ import java.security.Timestamp;
 public class SearchList {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
-    private Integer searchData;
+    @Column(name = "search_data")
+    private String searchData;
 
     @ManyToOne
     @JoinColumn(name = "search_user_id", nullable = false)
-    private User searchUserID;
+    private User searchUser;
 
+    @Column(name = "search_date")
     private Timestamp searchDate;
 
     // Getters and Setters

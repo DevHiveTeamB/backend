@@ -3,6 +3,8 @@ package com.devhive03.Model.DAO;
 import jakarta.persistence.*;
 
 import java.security.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "posts")
@@ -13,8 +15,9 @@ public class Post {
     @Column(name = "post_id", nullable = false)
     private Integer postID;
 
-    @Column(name = "lecture_id", nullable = false)
-    private Integer lectureID;
+    @ManyToOne
+    @JoinColumn(name = "lecture_id", nullable = false)
+    private Lecture lecture;
 
     @ManyToOne
     @JoinColumn(name = "writer_id", nullable = false)
@@ -36,5 +39,24 @@ public class Post {
     @Column(name = "hits")
     private Integer hits;
 
+    //쪽지방 연관관계
+    @OneToOne(mappedBy = "posts")
+    private MessageRoom messageRoom;
+
+    //게시글 사진 연관관계
+    @OneToMany(mappedBy = "posts")
+    private List<PostPicture> postPictures = new ArrayList<>();
+
+    //게시글 신고 연관관계
+    @OneToMany(mappedBy = "posts")
+    private List<PostReports> postReports = new ArrayList<>();
+
+    //계시글 좋아요 목록 연관관계
+    @OneToMany(mappedBy = "posts")
+    private List<PostLikesList> postLikesLists = new ArrayList<>();
+
+    //게시글 찜 연관관계
+    @OneToMany(mappedBy = "posts")
+    private List<Favorites> favorites = new ArrayList<>();
     // Getters and Setters
 }

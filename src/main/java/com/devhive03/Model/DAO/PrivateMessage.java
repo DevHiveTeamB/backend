@@ -1,34 +1,31 @@
 package com.devhive03.Model.DAO;
 
 import jakarta.persistence.*;
+import jakarta.websocket.OnMessage;
 
 import java.security.Timestamp;
 
 @Entity
-@Table(name = "PrivateMessages")
+@Table(name = "private_messages")
 public class PrivateMessage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
+    @Column(name = "message_id", nullable = false)
     private Integer messageID;
 
-    @Column(nullable = false)
-    private Integer messageRoomsID;
+    @ManyToOne
+    @JoinColumn(name = "messagerooms_id", nullable = false)
+    private MessageRoom messageRooms;
 
-    @Column(nullable = false)
-    private Integer postID;
+    @ManyToOne
+    @JoinColumn(name = "message_writer_id", nullable = false)
+    private User MessageWriter;
 
-    @Column(nullable = false)
-    private Integer writerID2;
-
-    @Column
-    private Integer writerID;
-
-    @Column
+    @Column(name = "private_message_content")
     private String privateMessageContent;
 
-    @Column
+    @Column(name = "private_message_content_date")
     private Timestamp privateMessageContentDate;
 
     // Getters and Setters

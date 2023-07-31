@@ -3,21 +3,21 @@ package com.devhive03.Model.DAO;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "PostLikesList")
+@Table(name = "post_likes_list")
 public class PostLikesList {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
-    private Integer postLikeID;
+    @Column(name = "postlike_id", nullable = false)
+    private Integer likePostID;
 
-
-    @Column(nullable = false)
-    private Integer likedPostID;
+    @ManyToOne
+    @JoinColumn(name = "post_id", nullable = false)
+    private Post post;
 
     @ManyToOne
     @JoinColumn(name = "like_post_user_id", nullable = false)
-    private User likePostUserID;
+    private User likePostUser;
 
     // Getters and Setters
 }

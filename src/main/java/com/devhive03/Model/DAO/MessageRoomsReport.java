@@ -15,10 +15,11 @@ public class MessageRoomsReport { //나중에 s뺴줘
 
     @ManyToOne
     @JoinColumn(name = "reporter_user_id", nullable = false)
-    private User reporterUserID;
+    private User reporterUser;
 
-    @Column(name = "reportedMessageRooms_ID", nullable = false)
-    private Integer reportedMessageRoomsID;
+    @OneToOne
+    @JoinColumn(name = "reportedMessageRooms_ID", nullable = false)
+    private MessageRoom reportedMessageRooms;
 
     @Column(name = "report_content")
     private String reportContent;

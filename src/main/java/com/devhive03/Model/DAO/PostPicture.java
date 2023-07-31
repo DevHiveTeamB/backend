@@ -3,22 +3,24 @@ package com.devhive03.Model.DAO;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "Postspicture")
+@Table(name = "posts_picture")
 public class PostPicture {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
+    @Column(name = "posts_picture_id", nullable = false)
     private Integer postspictureID;
 
-    @Column(nullable = false)
-    private Integer postID;
+    @ManyToOne
+    @JoinColumn(name = "post_id", nullable = false)
+    private Post post;
 
-    @Column(nullable = false)
-    private Integer userID;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Lob
-    @Column
+    @Column(name = "picture")
     private String picture;
 
     // Getters and Setters
