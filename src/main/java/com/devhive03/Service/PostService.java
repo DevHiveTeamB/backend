@@ -28,7 +28,7 @@ public class PostService {
     }
 
     public List<Post> getPostsByUserId(Long userId) {
-        return postDAORepository.findByWriterId(userId);
+        return postDAORepository.findAllByWriterId(userId);
     }
 
     // Read All
