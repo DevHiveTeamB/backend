@@ -34,8 +34,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private BCryptPasswordEncoder encode;
 
     @GetMapping("/auth/kakao/callback")
     public @ResponseBody String kakaoCallback(String code) throws JsonProcessingException { //Data를 리턴해주는 controller 함수
@@ -110,12 +108,9 @@ public class UserController {
 
         //kakao 로그인 할 경우 자동으로 어플에서 아디와 비번만들어서 생성해줌
         System.out.println("어플 유저네임"+kakaoProfile.getKakao_account().getEmail()+"_"+kakaoProfile.getId());
-        UUID garbagePassword = UUID.randomUUID();
-        System.out.println("어플 패스워드: "+ garbagePassword);
 
         User user = User.builder()
                 .username(kakaoProfile.getKakao_account().getEmail()+"_"+kakaoProfile.getId())
-                .password(garbagePassword.toString())
                 .email(kakaoProfile.getKakao_account().getEmail())
                 .build();
         userService.회원가입(user);

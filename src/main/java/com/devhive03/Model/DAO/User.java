@@ -9,6 +9,7 @@ import java.util.List;
 @Entity
 @Getter @Setter
 @RequiredArgsConstructor
+@AllArgsConstructor
 @Builder
 @Table(name = "users")
 public class User {
@@ -23,7 +24,7 @@ public class User {
     @Column(name = "login_id", nullable = false, unique = true, length = 50)
     private String loginId;
 
-    @Column(name = "password", nullable = false, length = 256)
+    @Column(name = "password", length = 256)
     private String password;
 
     @Column(name = "email", nullable = false, unique = true, length = 100)

@@ -1,21 +1,23 @@
 package com.devhive03.Service;
 
 import com.devhive03.Model.DAO.User;
+import com.devhive03.Repository.UserDAORepository;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
 
 
+@Service
+@RequiredArgsConstructor
 public class UserService {
-    @Autowired
-    private BCryptPasswordEncoder encoder;
+
+    private final UserDAORepository UserDAORepository;
 
     @Transactional
     public void 회원가입(User user){
-        String rawPassword = user.getPassword(); //1234원문
-        String encPassword = encoder.encode(rawPassword);
-        user.setPassword(encPassword);
-        user.setRole(RoleType=)
+        UserDAORepository.save(user);
 
     }
 }
