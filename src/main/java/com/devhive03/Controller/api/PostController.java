@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/posts")
@@ -17,9 +18,8 @@ public class PostController {
 
     // Get Post by ID
     @GetMapping("/get/{postId}")
-    public ResponseEntity<Post> getPostById(@PathVariable Long postId) {
-        Post post = postService.getPost(postId)
-                .orElseThrow(() -> new RuntimeException("Post with id " + postId + " not found"));
+    public ResponseEntity<Optional<Post>> getPostById(@PathVariable Long postId) {
+        Optional<Post> post = postService.getPost(postId);
         return ResponseEntity.ok(post);
     }
 
@@ -37,6 +37,7 @@ public class PostController {
         return ResponseEntity.ok(savedPost);
     }
 
+    //Update a Post by ID
     @PutMapping("/put/{postId}")
     public ResponseEntity<Post> updatePost(@PathVariable Long postId, @RequestBody Post postDetails) {
         Post updatedPost = postService.updatePost(postId, postDetails);
