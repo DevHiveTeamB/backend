@@ -1,27 +1,42 @@
 package com.devhive03.Controller.api;
 
+import com.devhive03.Model.DAO.KakaoProfile;
 import com.devhive03.Model.DAO.OAuthToken;
+import com.devhive03.Model.DAO.User;
+import com.devhive03.Service.UserService;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.antlr.v4.runtime.Token;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.util.UUID;
 
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 @Controller
 public class UserController {
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private BCryptPasswordEncoder encode;
 
     @GetMapping("/auth/kakao/callback")
     public @ResponseBody String kakaoCallback(String code) throws JsonProcessingException { //Data를 리턴해주는 controller 함수
@@ -78,6 +93,33 @@ public class UserController {
                 kakaoProfileRequest2,
                 String.class
         );
+        System.out.println(response2.getBody());
+
+        ObjectMapper objectMapper2 = new ObjectMapper();
+        KakaoProfile kakaoProfile = null;
+        try {
+            kakaoProfile = objectMapper2.readValue(response2.getBody(), KakaoProfile.class);
+        }catch(JsonMappingException e){
+            e.printStackTrace();
+        }catch (JsonProcessingException e){
+            e.printStackTrace();
+        }
+
+        //User 오브젝트: username,password,email
+        System.out.println("카카오 아이디(번호): " + kakaoProfile.getId() );
+        System.out.println("카카오 이메일: "+kakaoProfile.getKakao_account().getEmail());
+
+        //kakao 로그인 할 경우 자동으로 어플에서 아디와 비번만들어서 생성해줌
+        System.out.println("어플 유저네임"+kakaoProfile.getKakao_account().getEmail()+"_"+kakaoProfile.getId());
+        UUID garbagePassword = UUID.randomUUID();
+        System.out.println("어플 패스워드: "+ garbagePassword);
+
+        User user = User.builder()
+                .username(kakaoProfile.getKakao_account().getEmail()+"_"+kakaoProfile.getId())
+                .password(garbagePassword.toString())
+                .email(kakaoProfile.getKakao_account().getEmail())
+                .build();
+        userService.회원가입(user);
 
         //response에는 http status code,헤더정보,실제 데이터가 존재하는 body정보를 확인 할 수 있음
         return response2.getBody();

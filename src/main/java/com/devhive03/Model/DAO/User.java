@@ -1,11 +1,15 @@
 package com.devhive03.Model.DAO;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter @Setter
+@RequiredArgsConstructor
+@Builder
 @Table(name = "users")
 public class User {
     @Id
