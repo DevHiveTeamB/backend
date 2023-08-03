@@ -18,16 +18,16 @@ public class User {
     @Column(name = "user_id", nullable = false)
     private Long id;
 
-    @Column(name = "username", nullable = false, length = 50)
+    @Column(name = "username", length = 50)
     private String username;
 
-    @Column(name = "login_id", nullable = false, unique = true, length = 50)
+    @Column(name = "login_id", length = 50)
     private String loginId;
 
     @Column(name = "password", length = 256)
     private String password;
 
-    @Column(name = "email", nullable = false, unique = true, length = 100)
+    @Column(name = "email", length = 100)
     private String email;
 
     @Column(name = "phone_number", length = 15)
