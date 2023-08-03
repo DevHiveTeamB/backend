@@ -26,7 +26,7 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/auth/kakao/callback")
-    public @ResponseBody ResponseEntity<User> kakaoCallback(String code) throws JsonProcessingException { //Data를 리턴해주는 controller 함수
+    public @ResponseBody void kakaoCallback(String code) throws JsonProcessingException { //Data를 리턴해주는 controller 함수
 
         //post방식으로 key=value 데이터를 요청(카카오쪽으로)
 
@@ -106,16 +106,32 @@ public class UserController {
 
         System.out.println("kakaousername:"+kakaouser.getUsername());
         System.out.println("kakaoemail:"+kakaouser.getEmail());
+
+        RestTemplate rt3 = new RestTemplate();
+        HttpHeaders headers3= new HttpHeaders();
+        headers3.add("Host"," localhost:5000");
+        headers3.add("Connection", "keep-alive");
+        headers3.add("Content-type"," application/json");
+        headers3.add("Content-Length", "200");
+
+
         //가입자 혹은 비가입자 체크해서 처리
         User originuser = userService.회원찾기(kakaouser.getUsername());
 
+        HttpEntity<MultiValueMap<String,String>> kakaoProfileRequest3 =
+                new HttpEntity<>(headers3, (MultiValueMap<String, String>) originuser);
+
         if(originuser == null) {
             User savedUser = userService.회원가입(kakaouser);
-            return ResponseEntity.ok(savedUser);
+            kakaoProfileRequest3 = new HttpEntity<>(headers3, (MultiValueMap<String, String>) savedUser);
         }
 
-        return ResponseEntity.ok(originuser);
 
+        ResponseEntity<String> response3 = rt3.exchange(
+                "https://login.com",
+                HttpMethod.POST,
+                kakaoProfileRequest3,
+                String.class);
     }
 
 
