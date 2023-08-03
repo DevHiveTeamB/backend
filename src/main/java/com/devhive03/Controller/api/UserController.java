@@ -13,17 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -34,9 +31,8 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-
     @GetMapping("/auth/kakao/callback")
-    public @ResponseBody String kakaoCallback(String code) throws JsonProcessingException { //Data를 리턴해주는 controller 함수
+    public @ResponseBody ResponseEntity<User> kakaoCallback(String code) throws JsonProcessingException { //Data를 리턴해주는 controller 함수
 
         //post방식으로 key=value 데이터를 요청(카카오쪽으로)
 
@@ -109,13 +105,26 @@ public class UserController {
         //kakao 로그인 할 경우 자동으로 어플에서 아디와 비번만들어서 생성해줌
         System.out.println("어플 유저네임"+kakaoProfile.getKakao_account().getEmail()+"_"+kakaoProfile.getId());
 
-        User user = User.builder()
-                .username(kakaoProfile.getKakao_account().getEmail()+"_"+kakaoProfile.getId())
+        User kakaouser = User.builder()
+                .username(kakaoProfile.getProperties().getNickname())
                 .email(kakaoProfile.getKakao_account().getEmail())
                 .build();
-        userService.회원가입(user);
 
-        //response에는 http status code,헤더정보,실제 데이터가 존재하는 body정보를 확인 할 수 있음
-        return response2.getBody();
+        System.out.println("kakaousername:"+kakaouser.getUsername());
+        System.out.println("kakaoemail:"+kakaouser.getEmail());
+        //가입자 혹은 비가입자 체크해서 처리
+        User originuser = userService.회원찾기(kakaouser.getUsername());
+
+        if(originuser == null) {
+            User savedUser = userService.회원가입(kakaouser);
+            return ResponseEntity.ok(savedUser);
+        }
+
+        System.out.println("originuser : "+originuser);
+
+        return ResponseEntity.ok(originuser);
+
     }
+
+
 }

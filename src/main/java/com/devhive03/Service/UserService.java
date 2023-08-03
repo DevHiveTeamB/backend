@@ -4,8 +4,6 @@ import com.devhive03.Model.DAO.User;
 import com.devhive03.Repository.UserDAORepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
@@ -16,8 +14,13 @@ public class UserService {
     private final UserDAORepository UserDAORepository;
 
     @Transactional
-    public void 회원가입(User user){
-        UserDAORepository.save(user);
+    public User 회원찾기(String username) {
+        return UserDAORepository.findByUsername(username).orElse(null);
+    }
+
+    @Transactional
+    public User 회원가입(User user){
+        return UserDAORepository.save(user);
 
     }
 }
