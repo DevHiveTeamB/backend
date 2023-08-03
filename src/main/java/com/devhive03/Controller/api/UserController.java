@@ -8,20 +8,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.antlr.v4.runtime.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
-import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
-import java.util.Optional;
-import java.util.UUID;
 
 
 @JsonIgnoreProperties(ignoreUnknown=true)
@@ -99,11 +93,11 @@ public class UserController {
         }
 
         //User 오브젝트: username,password,email
-        System.out.println("카카오 아이디(번호): " + kakaoProfile.getId() );
-        System.out.println("카카오 이메일: "+kakaoProfile.getKakao_account().getEmail());
+        System.out.println("카카오 아이디(번호) : " + kakaoProfile.getId() );
+        System.out.println("카카오 이메일 : "+kakaoProfile.getKakao_account().getEmail());
 
         //kakao 로그인 할 경우 자동으로 어플에서 아디와 비번만들어서 생성해줌
-        System.out.println("어플 유저네임"+kakaoProfile.getKakao_account().getEmail()+"_"+kakaoProfile.getId());
+        System.out.println("어플 유저네임 : "+kakaoProfile.getKakao_account().getEmail()+"_"+kakaoProfile.getId());
 
         User kakaouser = User.builder()
                 .username(kakaoProfile.getProperties().getNickname())
@@ -119,8 +113,6 @@ public class UserController {
             User savedUser = userService.회원가입(kakaouser);
             return ResponseEntity.ok(savedUser);
         }
-
-        System.out.println("originuser : "+originuser);
 
         return ResponseEntity.ok(originuser);
 
