@@ -1,11 +1,15 @@
 package com.devhive03.Model.DAO;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@RequiredArgsConstructor
+@AllArgsConstructor
 @Table(name = "lectures")
 public class Lecture {
 
