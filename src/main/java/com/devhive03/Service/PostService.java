@@ -52,4 +52,21 @@ public class PostService {
     public void deletePost(Long id) {
         postDAORepository.deleteById(id);
     }
+
+
+    public List<Post> getPostsByTitle(String postTitle) {
+        return postDAORepository.findByPostTitle(postTitle);
+    }
+
+    public List<Post> getPostsByLectureName(String lectureName) {
+        return postDAORepository.findByLecture_LectureName(lectureName);
+    }
+
+    public List<Post> getPostsByProfessorName(String professorName) {
+        return postDAORepository.findByLecture_ProfessorName(professorName);
+    }
+
+    public List<Post> getPostsByMajor(String major) {
+        return postDAORepository.findByLecture_Major(major);
+    }
 }
