@@ -113,31 +113,30 @@ public class KakaoUserController {
         //가입자 혹은 비가입자 체크
         Optional<User> user = userDAORepository.findByUsername(username);
         User realUser = null;
+        Long userId = 0L;
         //기존 회원일 경우
         if (user.isPresent()) {
             System.out.println("기존 회원입니다.");
             realUser = user.get();
+            userId = realUser.getId();
         }
-        //가입자일 경우 데이터베이스 저장
+        //새로운 가입자일경우 데이터베이스 저장
         else {
             System.out.println("기존 회원이 아닙니다.");
-            User newUser = User.builder()
-                    .username(username)
-                    .email(kakaoProfile.getKakao_account().getEmail())
-                    .profilePhoto(kakaoProfile.getProperties().getProfile_image())
-                    .build();
+
+            User newUser = new User();
+            newUser.setUsername(username);
+            newUser.setEmail(kakaoProfile.getKakao_account().getEmail());
+            newUser.setProfilePhoto(kakaoProfile.getProperties().getProfile_image());
 
             realUser = userDAORepository.save(newUser);
-
-            System.out.println("newUsername:" + newUser.getUsername());
-            System.out.println("newEmail:" + newUser.getEmail());
-            System.out.println("newProfilePhoto:" + newUser.getProfilePhoto());
+            userId = realUser.getId();
         }
 
         //로그인 완료 화면으로 리다이렉트
         RedirectView redirectView = new RedirectView("http://localhost:8081/about");
-        //쿼리스트링으로 realUser를 보내줌
-        redirectView.addStaticAttribute("username", realUser.getUsername());
+        //쿼리스트링으로 UserID를 보내줌
+        redirectView.addStaticAttribute("userId", userId);
 
         return redirectView;
     }
