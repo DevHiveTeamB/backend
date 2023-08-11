@@ -27,6 +27,9 @@ public class User {
     @Column(name = "login_id", length = 50)
     private String loginId;
 
+    @Column(name = "kakao_id", length = 50)
+    private Long kakaoId;
+
     @Column(name = "password", length = 256)
     private String password;
 

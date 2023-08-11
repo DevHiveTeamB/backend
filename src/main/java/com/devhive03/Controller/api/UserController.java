@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 // 경로 설정
-@RestController("/v1/user")
+@RestController
+@RequestMapping("/v1/user")
 public class UserController {
 
     @Autowired

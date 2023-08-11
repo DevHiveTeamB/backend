@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface UserDAORepository extends JpaRepository<User, Long> {
     Optional<User> findByUsername(String username);
+
+    Optional<User> findByKakaoId(Long kakaoId);
 }

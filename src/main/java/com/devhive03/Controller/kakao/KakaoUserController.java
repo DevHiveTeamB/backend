@@ -1,4 +1,4 @@
-package com.devhive03.Controller.api;
+package com.devhive03.Controller.kakao;
 
 import com.devhive03.Model.DAO.KakaoProfile;
 import com.devhive03.Model.DAO.OAuthToken;
@@ -108,10 +108,8 @@ public class KakaoUserController {
 
         //kakao 로그인 할 경우 자동으로 어플에서 아디와 비번만들어서 생성해줌
 
-        String username = kakaoProfile.getProperties().getNickname() + "_" + kakaoProfile.getId();
-
         //가입자 혹은 비가입자 체크
-        Optional<User> user = userDAORepository.findByUsername(username);
+        Optional<User> user = userDAORepository.findByKakaoId(kakaoProfile.getId());
         User realUser = null;
         Long userId = 0L;
         //기존 회원일 경우
@@ -125,7 +123,8 @@ public class KakaoUserController {
             System.out.println("기존 회원이 아닙니다.");
 
             User newUser = new User();
-            newUser.setUsername(username);
+            newUser.setKakaoId(kakaoProfile.getId());
+            newUser.setUsername(kakaoProfile.getProperties().getNickname());
             newUser.setEmail(kakaoProfile.getKakao_account().getEmail());
             newUser.setProfilePhoto(kakaoProfile.getProperties().getProfile_image());
 

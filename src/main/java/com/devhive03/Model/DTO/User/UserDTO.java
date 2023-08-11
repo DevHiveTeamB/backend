@@ -9,7 +9,7 @@ import lombok.Data;
 public class UserDTO {
     private Long id;
     private String username;
-    private String loginId;
+    private Long kakaoId;
     private String email;
     private String phoneNumber;
     private String profilePhoto;
@@ -22,7 +22,7 @@ public class UserDTO {
         return UserDTO.builder()
             .id(user.getId())
             .username(user.getUsername())
-            .loginId(user.getLoginId())
+            .kakaoId(user.getKakaoId())
             .email(user.getEmail())
             .phoneNumber(user.getPhoneNumber())
             .profilePhoto(user.getProfilePhoto())
