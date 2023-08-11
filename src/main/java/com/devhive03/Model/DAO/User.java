@@ -1,8 +1,11 @@
 package com.devhive03.Model.DAO;
 
-import com.devhive03.Model.DTO.User.UserUpdateDTO;
+import com.devhive03.Model.DTO.User.UserDTO;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,20 +107,19 @@ public class User {
     @OneToMany(mappedBy = "MessageWriter")
     private List<PrivateMessage> privateMessages = new ArrayList<>();
 
-    public static User of(UserUpdateDTO userUpdateDTO) {
-
-        User newUser = new User();
-        newUser.setId(userUpdateDTO.getId());
-        newUser.setUsername(userUpdateDTO.getUsername());
-        newUser.setPhoneNumber(userUpdateDTO.getPhoneNumber());
-        newUser.setProfilePhoto(userUpdateDTO.getProfilePhoto());
-        newUser.setIntroduction(userUpdateDTO.getIntroduction());
-        newUser.setMembership(userUpdateDTO.getMembership());
-        newUser.setCertification(userUpdateDTO.getCertification());
-        newUser.setRatingState(userUpdateDTO.getRatingState());
-
-        return newUser;
+    //UserUpdateDTO를 User 삽입
+    public User update(UserDTO userUpdateDTO) {
+        this.username = userUpdateDTO.getUsername();
+        this.phoneNumber = userUpdateDTO.getPhoneNumber();
+        this.profilePhoto = userUpdateDTO.getProfilePhoto();
+        this.introduction = userUpdateDTO.getIntroduction();
+        this.membership = userUpdateDTO.getMembership();
+        this.certification = userUpdateDTO.getCertification();
+        this.ratingState = userUpdateDTO.getRatingState();
+        return this;
     }
+
+
 
     // getters and setters
 
