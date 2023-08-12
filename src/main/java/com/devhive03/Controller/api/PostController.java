@@ -88,22 +88,4 @@ public class PostController {
 
         return ResponseEntity.ok(postItemDTOS);
     }
-
-    @GetMapping("/lecture/{lectureName}")
-    public ResponseEntity<List<Post>> getPostsByLectureName(@PathVariable String lectureName) {
-        List<Post> posts = postService.getPostsByLectureName(lectureName);
-        return ResponseEntity.ok(posts);
-    }
-
-    @GetMapping("/professor/{professorName}")
-    public ResponseEntity<List<Post>> getPostsByProfessorName(@PathVariable String professorName) {
-        List<Post> posts = postService.getPostsByProfessorName(professorName);
-        return ResponseEntity.ok(posts);
-    }
-
-    @GetMapping("/major/{major}")
-    public ResponseEntity<List<Post>> getPostsByMajor(@PathVariable String major) {
-        List<Post> posts = postService.getPostsByMajor(major);
-        return ResponseEntity.ok(posts);
-    }
 }
