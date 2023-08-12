@@ -19,8 +19,7 @@ public class MessageRoom {
     @JoinColumn(name = "buyer_id", nullable = false)
     private User buyer;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id", nullable = false)
+    @OneToOne(mappedBy = "messageRoom", fetch = FetchType.LAZY)
     private Post post;
 
     @Column(name = "last_message_id")

@@ -50,7 +50,8 @@ public class Post {
     private Integer hits;
 
     //쪽지방 연관관계
-    @OneToOne(mappedBy = "post", fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "message_room_id")
     private MessageRoom messageRoom;
 
     //게시글 사진 연관관계
