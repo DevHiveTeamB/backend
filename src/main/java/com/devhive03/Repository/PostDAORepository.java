@@ -13,7 +13,10 @@ public interface PostDAORepository extends JpaRepository<Post, Long> {
     @Query("select p from Post p left join fetch p.lecture left join fetch p.postPictures left join fetch p.writer where p.postId = :postId")
     Optional<Post> findPostId(@Param("postId") Long postId);
 
-    List<Post> findAllByWriterId(Long userId);
+    @Query("select p from Post p left join fetch p.postPictures where p.writer.id = :userId")
+    List<Post> findAllByWriterId(@Param("userId") Long userId);
+
+
 
     List<Post> findByPostTitle(String postTitle);
     List<Post> findByLecture_LectureName(String lectureName);

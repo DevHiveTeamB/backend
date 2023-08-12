@@ -50,16 +50,16 @@ public class PostController {
         return ResponseEntity.ok(postDTO);
     }
 
-//    @GetMapping("/all/{userID}")
-//    public ResponseEntity<PostGetDTO> getAllPostBy(@PathVariable("userID") Long userID, @PathVariable("postID") Long postId) {
-//
-//    }
+    // Get Posts by WriterId
+    @GetMapping("/{userId}")
+    public ResponseEntity<PostsDTO> getAllPostBy(@PathVariable("userId") Long userID) {
+        List<Post> posts = postDAORepository.findAllByWriterId(userID);
+        UserWriterDTO userWriterDTO = UserWriterDTO.of(posts.get(0).getWriter());
 
-    // Get Posts by User ID
-    @GetMapping("/user/get/{userId}")
-    public ResponseEntity<List<Post>> getPostsByUserId(@PathVariable Long userId) {
-        List<Post> posts = postService.getPostsByUserId(userId);
-        return ResponseEntity.ok(posts);
+        List<PostItemDTO> postItemDTOS = posts.stream().map(PostItemDTO::of).collect(Collectors.toList());
+
+        PostsDTO postsDTO = new PostsDTO(userWriterDTO, postItemDTOS);
+        return ResponseEntity.ok(postsDTO);
     }
 
     // Create a new Post
