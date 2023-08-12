@@ -1,6 +1,11 @@
 package com.devhive03.Controller.api;
 
+import com.devhive03.Controller.ExceptionControll.ResourceNotFoundException;
 import com.devhive03.Model.DAO.Post;
+import com.devhive03.Model.DTO.Post.PostDTO;
+import com.devhive03.Repository.FavoritesDAORepository;
+import com.devhive03.Repository.PostDAORepository;
+import com.devhive03.Repository.PostLikesListDAORepository;
 import com.devhive03.Service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -8,20 +13,47 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/posts")
+@RequestMapping("/v1/post")
 @RequiredArgsConstructor
 public class PostController {
 
     private final PostService postService;
+    private final PostDAORepository postDAORepository;
+    private final PostLikesListDAORepository postLikesListDAORepository;
+    private final FavoritesDAORepository favoritesDAORepository;
 
     // Get Post by ID
-    @GetMapping("/get/{postId}")
-    public ResponseEntity<Optional<Post>> getPostById(@PathVariable Long postId) {
-        Optional<Post> post = postService.getPost(postId);
-        return ResponseEntity.ok(post);
+    @GetMapping("/{userId}/{postId}")
+    public ResponseEntity<PostDTO> getPostById(@PathVariable("userId") Long userId, @PathVariable("postId") Long postId) {
+        //fetch join으로 모든 정보 한번에 조회
+        Optional<Post> findPost = postDAORepository.findPostId(postId);
+        if (findPost.isEmpty()) {
+            throw new ResourceNotFoundException("Post not found with id " + postId);
+        }
+
+        Post post = findPost.get();
+        //PostDTO로 변환
+        PostDTO postDTO = PostDTO.of(post);
+
+
+        //좋아요 여부
+        boolean isLike = post.getPostLikesLists().stream().anyMatch(postLikesList -> postLikesList.getUser().getId().equals(userId));
+        postDTO.setIsLike(isLike);
+
+        //찜 여부
+        boolean isFavorite = post.getFavorites().stream().anyMatch(favorites -> favorites.getUser().getId().equals(userId));
+        postDTO.setIsFavorite(isFavorite);
+
+        return ResponseEntity.ok(postDTO);
     }
+
+//    @GetMapping("/all/{userID}")
+//    public ResponseEntity<PostGetDTO> getAllPostBy(@PathVariable("userID") Long userID, @PathVariable("postID") Long postId) {
+//
+//    }
 
     // Get Posts by User ID
     @GetMapping("/user/get/{userId}")
