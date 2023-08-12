@@ -2,10 +2,16 @@ package com.devhive03.Controller.api;
 
 import com.devhive03.Controller.ExceptionControll.ResourceNotFoundException;
 import com.devhive03.Model.DAO.Post;
+import com.devhive03.Model.DAO.User;
 import com.devhive03.Model.DTO.Post.PostDTO;
+import com.devhive03.Model.DTO.Post.PostItemDTO;
+import com.devhive03.Model.DTO.Post.PostParamsDTO;
+import com.devhive03.Model.DTO.Post.PostsDTO;
+import com.devhive03.Model.DTO.User.UserWriterDTO;
 import com.devhive03.Repository.FavoritesDAORepository;
 import com.devhive03.Repository.PostDAORepository;
 import com.devhive03.Repository.PostLikesListDAORepository;
+import com.devhive03.Repository.UserDAORepository;
 import com.devhive03.Service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,12 +28,13 @@ public class PostController {
 
     private final PostService postService;
     private final PostDAORepository postDAORepository;
+    private final UserDAORepository userDAORepository;
     private final PostLikesListDAORepository postLikesListDAORepository;
     private final FavoritesDAORepository favoritesDAORepository;
 
     // Get Post by ID
-    @GetMapping("/{userId}/{postId}")
-    public ResponseEntity<PostDTO> getPostById(@PathVariable("userId") Long userId, @PathVariable("postId") Long postId) {
+    @GetMapping("/{postId}")
+    public ResponseEntity<PostDTO> getPostById(@PathVariable("postId") Long postId, @RequestParam(required = false) Long userId) {
         //fetch join으로 모든 정보 한번에 조회
         Optional<Post> findPost = postDAORepository.findPostId(postId);
         if (findPost.isEmpty()) {
@@ -38,23 +45,32 @@ public class PostController {
         //PostDTO로 변환
         PostDTO postDTO = PostDTO.of(post);
 
+        //userId가 null이 아니면 좋아요, 찜 null
+        if (userId != null) {
+            //좋아요 여부
+            boolean isLike = post.getPostLikesLists().stream().anyMatch(postLikesList -> postLikesList.getUser().getId().equals(userId));
+            postDTO.setIsLike(isLike);
 
-        //좋아요 여부
-        boolean isLike = post.getPostLikesLists().stream().anyMatch(postLikesList -> postLikesList.getUser().getId().equals(userId));
-        postDTO.setIsLike(isLike);
-
-        //찜 여부
-        boolean isFavorite = post.getFavorites().stream().anyMatch(favorites -> favorites.getUser().getId().equals(userId));
-        postDTO.setIsFavorite(isFavorite);
+            //찜 여부
+            boolean isFavorite = post.getFavorites().stream().anyMatch(favorites -> favorites.getUser().getId().equals(userId));
+            postDTO.setIsFavorite(isFavorite);
+        }
 
         return ResponseEntity.ok(postDTO);
     }
 
     // Get Posts by WriterId
-    @GetMapping("/{userId}")
+    @GetMapping("/writer/{userId}")
     public ResponseEntity<PostsDTO> getAllPostBy(@PathVariable("userId") Long userID) {
         List<Post> posts = postDAORepository.findAllByWriterId(userID);
-        UserWriterDTO userWriterDTO = UserWriterDTO.of(posts.get(0).getWriter());
+
+        Optional<User> findWriter = userDAORepository.findById(userID);
+
+        if(findWriter.isEmpty()) {
+            throw new ResourceNotFoundException("User not found with id " + userID);
+        }
+
+        UserWriterDTO userWriterDTO = UserWriterDTO.of(findWriter.get());
 
         List<PostItemDTO> postItemDTOS = posts.stream().map(PostItemDTO::of).collect(Collectors.toList());
 
@@ -62,32 +78,15 @@ public class PostController {
         return ResponseEntity.ok(postsDTO);
     }
 
-    // Create a new Post
-    @PostMapping("/post")
-    public ResponseEntity<Post> createPost(@RequestBody Post post) {
-        Post savedPost = postService.createPost(post);
-        return ResponseEntity.ok(savedPost);
-    }
+    // Get All Posts
+    @GetMapping
+    public ResponseEntity<List<PostItemDTO>> getAllPosts(PostParamsDTO postParamsDTO) {
 
-    //Update a Post by ID
-    @PutMapping("/put/{postId}")
-    public ResponseEntity<Post> updatePost(@PathVariable Long postId, @RequestBody Post postDetails) {
-        Post updatedPost = postService.updatePost(postId, postDetails);
-        return ResponseEntity.ok(updatedPost);
-    }
+        List<Post> posts = postDAORepository.findAllByPostTitleAndLectureNameAndMajorAndProfessorName(postParamsDTO.getPostTitle(), postParamsDTO.getLectureName(), postParamsDTO.getMajor(), postParamsDTO.getProfessor());
 
-    // Delete a Post
-    @DeleteMapping("/delete/{postId}")
-    public ResponseEntity<?> deletePost(@PathVariable Long postId) {
-        postService.deletePost(postId);
-        return ResponseEntity.ok().build();
-    }
+        List<PostItemDTO> postItemDTOS = posts.stream().map(PostItemDTO::of).collect(Collectors.toList());
 
-    //강의 찾기 api
-    @GetMapping("/title/{postTitle}")
-    public ResponseEntity<List<Post>> getPostsByTitle(@PathVariable String postTitle) {
-        List<Post> posts = postService.getPostsByTitle(postTitle);
-        return ResponseEntity.ok(posts);
+        return ResponseEntity.ok(postItemDTOS);
     }
 
     @GetMapping("/lecture/{lectureName}")
