@@ -55,7 +55,7 @@ public class User {
     private Byte ratingState;
 
     //게시글 연관관계
-    @OneToMany(mappedBy = "writer")
+    @OneToMany(mappedBy = "writer", fetch = FetchType.LAZY)
     private List<Post> posts = new ArrayList<>();
 
     //쪽지방 연관관계

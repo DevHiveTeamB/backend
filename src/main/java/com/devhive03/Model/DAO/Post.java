@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,13 +18,18 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id", nullable = false)
-    private Long postID;
+    private Long postId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lecture_id", nullable = false)
     private Lecture lecture;
 
-    @ManyToOne
+    public void setLecture(Lecture lecture) {
+        this.lecture = lecture;
+        lecture.getPosts().add(this);
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "writer_id", nullable = false)
     private User writer;
 
@@ -45,7 +50,7 @@ public class Post {
     private Integer hits;
 
     //쪽지방 연관관계
-    @OneToOne(mappedBy = "post")
+    @OneToOne(mappedBy = "post", fetch = FetchType.LAZY)
     private MessageRoom messageRoom;
 
     //게시글 사진 연관관계

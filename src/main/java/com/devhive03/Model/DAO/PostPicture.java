@@ -1,8 +1,11 @@
 package com.devhive03.Model.DAO;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Getter @Setter
 @Table(name = "posts_picture")
 public class PostPicture {
 
@@ -11,17 +14,11 @@ public class PostPicture {
     @Column(name = "posts_picture_id", nullable = false)
     private Long postspictureID;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
 
     @Lob
     @Column(name = "picture")
     private String picture;
-
-    // Getters and Setters
 }
