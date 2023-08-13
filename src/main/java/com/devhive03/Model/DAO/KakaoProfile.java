@@ -32,13 +32,13 @@ public class KakaoProfile {
         public Boolean is_email_verified;
         public String email;
 
-    @Data
-    public class Profile {
+        @Data
+        public class Profile {
 
-        public String nickname;
-        public String thumbnail_image_url;
-        public String profile_image_url;
-        public Boolean is_default_image;
-    }
+            public String nickname;
+            public String thumbnail_image_url;
+            public String profile_image_url;
+            public Boolean is_default_image;
+        }
     }
 }

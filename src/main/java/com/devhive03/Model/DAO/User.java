@@ -1,7 +1,11 @@
 package com.devhive03.Model.DAO;
 
+import com.devhive03.Model.DTO.User.UserDTO;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +14,6 @@ import java.util.List;
 @Getter @Setter
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Builder
 @Table(name = "users")
 public class User {
     @Id
@@ -23,6 +26,9 @@ public class User {
 
     @Column(name = "login_id", length = 50)
     private String loginId;
+
+    @Column(name = "kakao_id", length = 50)
+    private Long kakaoId;
 
     @Column(name = "password", length = 256)
     private String password;
@@ -103,6 +109,20 @@ public class User {
     //개인 쪽지 연관관계
     @OneToMany(mappedBy = "MessageWriter")
     private List<PrivateMessage> privateMessages = new ArrayList<>();
+
+    //UserUpdateDTO를 User 삽입
+    public User update(UserDTO userUpdateDTO) {
+        this.username = userUpdateDTO.getUsername();
+        this.phoneNumber = userUpdateDTO.getPhoneNumber();
+        this.profilePhoto = userUpdateDTO.getProfilePhoto();
+        this.introduction = userUpdateDTO.getIntroduction();
+        this.membership = userUpdateDTO.getMembership();
+        this.certification = userUpdateDTO.getCertification();
+        this.ratingState = userUpdateDTO.getRatingState();
+        return this;
+    }
+
+
 
     // getters and setters
 
