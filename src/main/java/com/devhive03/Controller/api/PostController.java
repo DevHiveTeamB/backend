@@ -1,22 +1,26 @@
 package com.devhive03.Controller.api;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.devhive03.Controller.ExceptionControll.FileIsNotIOException;
 import com.devhive03.Controller.ExceptionControll.ResourceNotFoundException;
+import com.devhive03.Model.DAO.Lecture;
 import com.devhive03.Model.DAO.Post;
+import com.devhive03.Model.DAO.PostPicture;
 import com.devhive03.Model.DAO.User;
-import com.devhive03.Model.DTO.Post.PostDTO;
-import com.devhive03.Model.DTO.Post.PostItemDTO;
-import com.devhive03.Model.DTO.Post.PostParamsDTO;
-import com.devhive03.Model.DTO.Post.PostsDTO;
+import com.devhive03.Model.DTO.Post.*;
 import com.devhive03.Model.DTO.User.UserWriterDTO;
-import com.devhive03.Repository.FavoritesDAORepository;
-import com.devhive03.Repository.PostDAORepository;
-import com.devhive03.Repository.PostLikesListDAORepository;
-import com.devhive03.Repository.UserDAORepository;
+import com.devhive03.Repository.*;
 import com.devhive03.Service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,9 +30,14 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PostController {
 
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
     private final PostService postService;
     private final PostDAORepository postDAORepository;
+    private final PostPictureDAORepository postPictureDAORepository;
     private final UserDAORepository userDAORepository;
+    private final LectureDAORepository lectureDAORepository;
+    private final AmazonS3 amazonS3Client;
     private final PostLikesListDAORepository postLikesListDAORepository;
     private final FavoritesDAORepository favoritesDAORepository;
 
@@ -87,5 +96,51 @@ public class PostController {
         List<PostItemDTO> postItemDTOS = posts.stream().map(PostItemDTO::of).collect(Collectors.toList());
 
         return ResponseEntity.ok(postItemDTOS);
+    }
+
+    @PostMapping
+    public ResponseEntity<PostDTO> createPost(
+            @RequestPart(value = "pictures") List<MultipartFile> pictures,
+            @RequestPart(value = "data") PostFormDTO postFormDTO
+    ) {
+        Optional<User> user = userDAORepository.findById(postFormDTO.getUserId());
+        if(user.isEmpty()) {
+            throw new ResourceNotFoundException("User not found with id " + postFormDTO.getUserId());
+        }
+        Optional<Lecture> lecture = lectureDAORepository.findById(postFormDTO.getLectureId());
+        if(lecture.isEmpty()) {
+            throw new ResourceNotFoundException("Lecture not found with id " + postFormDTO.getLectureId());
+        }
+
+        Post post = new Post();
+        post.setWriter(user.get());
+        post.setLecture(lecture.get());
+        post.setPostTitle(postFormDTO.getPostTitle());
+        post.setPostContent(postFormDTO.getPostContent());
+        post.setPrice(postFormDTO.getPrice());
+
+
+        Post savedPost = postDAORepository.save(post);
+
+        try {
+            for (MultipartFile picture : pictures) {
+                String fileName = savedPost.getPostId() + "/" + picture.getOriginalFilename();
+                ObjectMetadata metadata = new ObjectMetadata();
+                metadata.setContentType(picture.getContentType());
+                metadata.setContentLength(picture.getSize());
+                //Upload to S3 with Public Read Permission
+                amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, picture.getInputStream(), metadata).withCannedAcl(CannedAccessControlList.PublicRead));
+                String fileUrl = amazonS3Client.getUrl(bucket, fileName).toString();
+                PostPicture postPicture = new PostPicture();
+                postPicture.setPost(savedPost);
+                postPicture.setPicture(fileUrl);
+                postPictureDAORepository.saveAll(savedPost.getPostPictures());
+            }
+        } catch (IOException e) {
+            throw new FileIsNotIOException("파일입출력에 실패했습니다.");
+        }
+
+        PostDTO postDTO = PostDTO.of(post);
+        return ResponseEntity.ok(postDTO);
     }
 }

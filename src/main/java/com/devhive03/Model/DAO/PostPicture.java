@@ -18,6 +18,11 @@ public class PostPicture {
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
+    public void setPost(Post post) {
+        this.post = post;
+        post.getPostPictures().add(this);
+    }
+
     @Lob
     @Column(name = "picture")
     private String picture;

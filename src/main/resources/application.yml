@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    include: S3-KEY
   jpa:
 #    show-sql: true
     hibernate:
@@ -48,6 +50,3 @@ cloud:
       auto: false
     s3:
       bucket: devhive
-
-AWS_ACCESS_KEY : 엑세스키
-AWS_SECRET_KEY : 시크릿키

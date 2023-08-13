@@ -41,7 +41,7 @@ public class Post {
     private String postContent;
 
     @Column(name = "post_date", nullable = false)
-    private Timestamp postDate;
+    private Timestamp postDate = new Timestamp(System.currentTimeMillis());
 
     @Column(name = "price", nullable = false)
     private Integer price;
