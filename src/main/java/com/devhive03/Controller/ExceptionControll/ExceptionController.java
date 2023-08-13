@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class ExceptionController {
@@ -36,6 +34,12 @@ public class ExceptionController {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<Map<String,String>> resourceNotFoundException(ResourceNotFoundException e, HttpServletRequest request) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("message", e.getMessage());
+        return ResponseEntity.status(400).body(map);
+    }
+    @ExceptionHandler(FileIsNotIOException.class)
+    public ResponseEntity<Map<String,String>> fileIsNotIOException(FileIsNotIOException e, HttpServletRequest request) {
         HashMap<String, String> map = new HashMap<>();
         map.put("message", e.getMessage());
         return ResponseEntity.status(400).body(map);

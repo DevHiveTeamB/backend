@@ -47,7 +47,7 @@ public class Post {
     private Integer price;
 
     @Column(name = "hits")
-    private Integer hits;
+    private Integer hits = 0;
 
     //쪽지방 연관관계
     @OneToOne(fetch = FetchType.LAZY)

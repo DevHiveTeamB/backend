@@ -36,3 +36,18 @@ server:
   servlet:
     context-path: /api/
 
+# s3 설정
+cloud:
+  aws:
+    credentials:
+      accessKey: ${AWS_ACCESS_KEY}
+      secretKey: ${AWS_SECRET_KEY}
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    s3:
+      bucket: devhive
+
+AWS_ACCESS_KEY : 엑세스키
+AWS_SECRET_KEY : 시크릿키
