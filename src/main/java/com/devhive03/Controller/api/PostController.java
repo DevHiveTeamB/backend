@@ -90,7 +90,7 @@ public class PostController {
     // Get All Posts
     @GetMapping
     public ResponseEntity<List<PostItemDTO>> getAllPosts(PostParamsDTO postParamsDTO) {
-
+        postParamsDTO.nullCheck();
         List<Post> posts = postDAORepository.findAllByPostParamsDTO(postParamsDTO.getPostTitle(), postParamsDTO.getLectureName(), postParamsDTO.getMajor(), postParamsDTO.getProfessor());
 
         List<PostItemDTO> postItemDTOS = posts.stream().map(PostItemDTO::of).collect(Collectors.toList());
@@ -134,12 +134,12 @@ public class PostController {
                 PostPicture postPicture = new PostPicture();
                 postPicture.setPost(savedPost);
                 postPicture.setPicture(fileUrl);
-                postPictureDAORepository.saveAll(savedPost.getPostPictures());
             }
         } catch (IOException e) {
             throw new FileIsNotIOException("파일입출력에 실패했습니다.");
         }
 
+        postPictureDAORepository.saveAll(savedPost.getPostPictures());
         PostDTO postDTO = PostDTO.of(post);
         return ResponseEntity.ok(postDTO);
     }
