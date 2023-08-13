@@ -50,24 +50,24 @@ public class Post {
     private Integer hits = 0;
 
     //쪽지방 연관관계
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "message_room_id")
     private MessageRoom messageRoom;
 
     //게시글 사진 연관관계
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostPicture> postPictures = new ArrayList<>();
 
     //게시글 신고 연관관계
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostReports> postReports = new ArrayList<>();
 
     //계시글 좋아요 목록 연관관계
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostLikesList> postLikesLists = new ArrayList<>();
 
     //게시글 찜 연관관계
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Favorites> favorites = new ArrayList<>();
     // Getters and Setters
 }

@@ -1,9 +1,7 @@
 package com.devhive03.Controller.api;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.*;
 import com.devhive03.Controller.ExceptionControll.FileIsNotIOException;
 import com.devhive03.Controller.ExceptionControll.ResourceNotFoundException;
 import com.devhive03.Model.DAO.Lecture;
@@ -27,8 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Tag(name = "게시글", description = "게시글 API")
@@ -165,5 +162,71 @@ public class PostController {
         postPictureDAORepository.saveAll(savedPost.getPostPictures());
         PostDTO postDTO = PostDTO.of(post);
         return ResponseEntity.ok(postDTO);
+    }
+
+    @Operation(summary = "게시글 수정", description = "게시글 수정")
+    @ApiResponse(responseCode = "200", description = "게시글 수정 성공")
+    @ApiResponse(responseCode = "400", description = "게시글 수정 실패", content = @Content(examples = @ExampleObject(value = "{\n" +
+            "  \"message\": \"Post not found with id 1\",\n" +
+            "}")))
+    @PutMapping
+    public ResponseEntity<PostDTO> updatePost(@RequestBody PostUpdateDTO postUpdateDTO) {
+        Optional<Post> findPost = postDAORepository.findPostId(postUpdateDTO.getPostId());
+        if (findPost.isEmpty()) {
+            throw new ResourceNotFoundException("Post not found with id " + postUpdateDTO.getPostId());
+        }
+
+        //게시글 수정
+        Post post = findPost.get();
+        post.setPostTitle(postUpdateDTO.getPostTitle());
+        post.setPostContent(postUpdateDTO.getPostContent());
+        post.setPrice(postUpdateDTO.getPrice());
+
+
+        //강의 수정
+        if(!Objects.equals(post.getLecture().getLectureID(), postUpdateDTO.getLectureId())) {
+            Optional<Lecture> lecture = lectureDAORepository.findById(postUpdateDTO.getLectureId());
+            if(lecture.isEmpty()) {
+                throw new ResourceNotFoundException("Lecture not found with id " + postUpdateDTO.getLectureId());
+            }
+            post.setLecture(lecture.get());
+        }
+
+        //저장
+        Post savedPost = postDAORepository.save(post);
+        PostDTO postDTO = PostDTO.of(savedPost);
+        return ResponseEntity.ok(postDTO);
+    }
+
+    @Operation(summary = "게시글 삭제", description = "게시글 삭제")
+    @ApiResponse(responseCode = "200", description = "게시글 삭제 성공", content = @Content(examples = @ExampleObject(value = "{\n" +
+            "  \"message\": \"게시글 삭제 성공\",\n" +
+            "}")))
+    @ApiResponse(responseCode = "400", description = "게시글 삭제 실패", content = @Content(examples = @ExampleObject(value = "{\n" +
+            "  \"message\": \"Post not found with id 1\",\n" +
+            "}")))
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<Map<String,String>> deletePost(@PathVariable Long postId) {
+        Optional<Post> findPost = postDAORepository.findPostId(postId);
+        if (findPost.isEmpty()) {
+            throw new ResourceNotFoundException("Post not found with id " + postId);
+        }
+
+        //s3 사진들 삭제
+        ListObjectsV2Request request = new ListObjectsV2Request().withBucketName(bucket).withPrefix(postId + "/");
+        ListObjectsV2Result result = amazonS3Client.listObjectsV2(request);
+        List<DeleteObjectsRequest.KeyVersion> keyToDelete = new ArrayList<>();
+        for (S3ObjectSummary s3ObjectSummary : result.getObjectSummaries()) {
+            keyToDelete.add(new DeleteObjectsRequest.KeyVersion(s3ObjectSummary.getKey()));
+        }
+        // 모든 파일 삭제
+        if (!keyToDelete.isEmpty()) {
+            DeleteObjectsRequest deleteObjectsRequest = new DeleteObjectsRequest(bucket).withKeys(keyToDelete);
+            amazonS3Client.deleteObjects(deleteObjectsRequest);
+        }
+
+        Post post = findPost.get();
+        postDAORepository.delete(post);
+        return ResponseEntity.ok(Map.of("message", "게시글 삭제 성공"));
     }
 }

@@ -5,7 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 @Table(name = "post_likes_list")
 public class PostLikesList {
 
@@ -14,7 +15,7 @@ public class PostLikesList {
     @Column(name = "postlike_id", nullable = false)
     private Long likePostID;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
