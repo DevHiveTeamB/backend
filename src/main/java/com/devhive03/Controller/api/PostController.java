@@ -14,8 +14,14 @@ import com.devhive03.Model.DTO.Post.*;
 import com.devhive03.Model.DTO.User.UserWriterDTO;
 import com.devhive03.Repository.*;
 import com.devhive03.Service.PostService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,6 +31,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Tag(name = "게시글", description = "게시글 API")
 @RestController
 @RequestMapping("/v1/post")
 @RequiredArgsConstructor
@@ -41,7 +48,12 @@ public class PostController {
     private final PostLikesListDAORepository postLikesListDAORepository;
     private final FavoritesDAORepository favoritesDAORepository;
 
-    // Get Post by ID
+    //설명추가
+    @Operation(summary = "게시글 조회", description = "특정 게시글 조회")
+    @ApiResponse(responseCode = "200", description = "게시글 조회 성공")
+    @ApiResponse(responseCode = "400", description = "게시글 조회 실패", content = @Content(examples = @ExampleObject(value = "{\n" +
+            "  \"message\": \"Post not found with id 1\",\n" +
+            "}")))
     @GetMapping("/{postId}")
     public ResponseEntity<PostDTO> getPostById(@PathVariable("postId") Long postId, @RequestParam(required = false) Long userId) {
         //fetch join으로 모든 정보 한번에 조회
@@ -69,7 +81,12 @@ public class PostController {
     }
 
     // Get Posts by WriterId
-    @GetMapping("/writer/{userId}")
+    @Operation(summary = "특정 유저가 작성한 게시글 조회", description = "특정 유저가 작성한 게시글 조회")
+    @ApiResponse(responseCode = "200", description = "게시글 조회 성공")
+    @ApiResponse(responseCode = "400", description = "게시글 조회 실패", content = @Content(examples = @ExampleObject(value = "{\n" +
+            "  \"message\": \"User not found with id 1\",\n" +
+            "}")))
+    @GetMapping(value = "/writer/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PostsDTO> getAllPostBy(@PathVariable("userId") Long userID) {
         List<Post> posts = postDAORepository.findAllByWriterId(userID);
 
@@ -88,6 +105,8 @@ public class PostController {
     }
 
     // Get All Posts
+    @Operation(summary = "검색 내용이 포함되는 게시글 조회", description = "검색 내용이 복수로 들어갈수 있으며 OR로 검색됩니다.")
+    @ApiResponse(responseCode = "200", description = "게시글 조회 성공")
     @GetMapping
     public ResponseEntity<List<PostItemDTO>> getAllPosts(PostParamsDTO postParamsDTO) {
         postParamsDTO.nullCheck();
@@ -97,8 +116,12 @@ public class PostController {
 
         return ResponseEntity.ok(postItemDTOS);
     }
-
-    @PostMapping
+    @Operation(summary = "게시글 생성", description = "이미지와 게시글 정보를 받아 게시글을 생성합니다.")
+    @ApiResponse(responseCode = "200", description = "게시글 조회 성공")
+    @ApiResponse(responseCode = "400", description = "게시글 조회 실패", content = @Content(examples = @ExampleObject(value = "{\n" +
+            "  \"message\": \"User not found with id 1\",\n" +
+            "}")))
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<PostDTO> createPost(
             @RequestPart(value = "pictures") List<MultipartFile> pictures,
             @RequestPart(value = "data") PostFormDTO postFormDTO
