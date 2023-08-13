@@ -8,6 +8,7 @@ spring:
           characterEncoding: utf-8
           CharSet: utf-8
           useUnicode: true
+        format_sql: true
   datasource:
     driverClassName: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://svc.sel3.cloudtype.app:31951/dev01?useUnicode=true&characterEncoding=utf8&characterSetResults=utf8
