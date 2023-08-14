@@ -54,10 +54,6 @@ public class PostService {
     }
 
 
-    public List<Post> getPostsByTitle(String postTitle) {
-        return postDAORepository.findByPostTitle(postTitle);
-    }
-
     public List<Post> getPostsByLectureName(String lectureName) {
         return postDAORepository.findByLecture_LectureName(lectureName);
     }

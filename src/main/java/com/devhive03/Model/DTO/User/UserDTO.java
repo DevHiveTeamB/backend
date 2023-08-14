@@ -1,11 +1,15 @@
 package com.devhive03.Model.DTO.User;
 
 import com.devhive03.Model.DAO.User;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserDTO {
     private Long id;
     private String username;
@@ -14,9 +18,9 @@ public class UserDTO {
     private String phoneNumber;
     private String profilePhoto;
     private String introduction;
-    private Byte membership;
-    private Byte certification;
-    private Byte ratingState;
+    private Long membership;
+    private Long certification;
+    private Long ratingState;
 
     public static UserDTO of(User user) {
         return UserDTO.builder()

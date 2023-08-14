@@ -1,78 +1,232 @@
 package com.devhive03.Controller.api;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.*;
+import com.devhive03.Controller.ExceptionControll.FileIsNotIOException;
+import com.devhive03.Controller.ExceptionControll.ResourceNotFoundException;
+import com.devhive03.Model.DAO.Lecture;
 import com.devhive03.Model.DAO.Post;
+import com.devhive03.Model.DAO.PostPicture;
+import com.devhive03.Model.DAO.User;
+import com.devhive03.Model.DTO.Post.*;
+import com.devhive03.Model.DTO.User.UserWriterDTO;
+import com.devhive03.Repository.*;
 import com.devhive03.Service.PostService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-import java.util.Optional;
+import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
 
+@Tag(name = "게시글", description = "게시글 API")
 @RestController
-@RequestMapping("/posts")
+@RequestMapping("/v1/post")
 @RequiredArgsConstructor
 public class PostController {
 
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
     private final PostService postService;
+    private final PostDAORepository postDAORepository;
+    private final PostPictureDAORepository postPictureDAORepository;
+    private final UserDAORepository userDAORepository;
+    private final LectureDAORepository lectureDAORepository;
+    private final AmazonS3 amazonS3Client;
+    private final PostLikesListDAORepository postLikesListDAORepository;
+    private final FavoritesDAORepository favoritesDAORepository;
 
-    // Get Post by ID
-    @GetMapping("/get/{postId}")
-    public ResponseEntity<Optional<Post>> getPostById(@PathVariable Long postId) {
-        Optional<Post> post = postService.getPost(postId);
-        return ResponseEntity.ok(post);
+    //설명추가
+    @Operation(summary = "게시글 조회", description = "특정 게시글 조회")
+    @ApiResponse(responseCode = "200", description = "게시글 조회 성공")
+    @ApiResponse(responseCode = "400", description = "게시글 조회 실패", content = @Content(examples = @ExampleObject(value = "{\n" +
+            "  \"message\": \"Post not found with id 1\",\n" +
+            "}")))
+    @GetMapping("/{postId}")
+    public ResponseEntity<PostDTO> getPostById(@PathVariable("postId") Long postId, @RequestParam(required = false) Long userId) {
+        //fetch join으로 모든 정보 한번에 조회
+        Optional<Post> findPost = postDAORepository.findPostId(postId);
+        if (findPost.isEmpty()) {
+            throw new ResourceNotFoundException("Post not found with id " + postId);
+        }
+
+        Post post = findPost.get();
+        //PostDTO로 변환
+        PostDTO postDTO = PostDTO.of(post);
+
+        //userId가 null이 아니면 좋아요, 찜 null
+        if (userId != null) {
+            //좋아요 여부
+            boolean isLike = post.getPostLikesLists().stream().anyMatch(postLikesList -> postLikesList.getUser().getId().equals(userId));
+            postDTO.setIsLike(isLike);
+
+            //찜 여부
+            boolean isFavorite = post.getFavorites().stream().anyMatch(favorites -> favorites.getUser().getId().equals(userId));
+            postDTO.setIsFavorite(isFavorite);
+        }
+
+        return ResponseEntity.ok(postDTO);
     }
 
-    // Get Posts by User ID
-    @GetMapping("/user/get/{userId}")
-    public ResponseEntity<List<Post>> getPostsByUserId(@PathVariable Long userId) {
-        List<Post> posts = postService.getPostsByUserId(userId);
-        return ResponseEntity.ok(posts);
+    // Get Posts by WriterId
+    @Operation(summary = "특정 유저가 작성한 게시글 조회", description = "특정 유저가 작성한 게시글 조회")
+    @ApiResponse(responseCode = "200", description = "게시글 조회 성공")
+    @ApiResponse(responseCode = "400", description = "게시글 조회 실패", content = @Content(examples = @ExampleObject(value = "{\n" +
+            "  \"message\": \"User not found with id 1\",\n" +
+            "}")))
+    @GetMapping(value = "/writer/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PostsDTO> getAllPostBy(@PathVariable("userId") Long userID) {
+        List<Post> posts = postDAORepository.findAllByWriterId(userID);
+
+        Optional<User> findWriter = userDAORepository.findById(userID);
+
+        if(findWriter.isEmpty()) {
+            throw new ResourceNotFoundException("User not found with id " + userID);
+        }
+
+        UserWriterDTO userWriterDTO = UserWriterDTO.of(findWriter.get());
+
+        List<PostItemDTO> postItemDTOS = posts.stream().map(PostItemDTO::of).collect(Collectors.toList());
+
+        PostsDTO postsDTO = new PostsDTO(userWriterDTO, postItemDTOS);
+        return ResponseEntity.ok(postsDTO);
     }
 
-    // Create a new Post
-    @PostMapping("/post")
-    public ResponseEntity<Post> createPost(@RequestBody Post post) {
-        Post savedPost = postService.createPost(post);
-        return ResponseEntity.ok(savedPost);
+    // Get All Posts
+    @Operation(summary = "검색 내용이 포함되는 게시글 조회", description = "검색 내용이 복수로 들어갈수 있으며 OR로 검색됩니다.")
+    @ApiResponse(responseCode = "200", description = "게시글 조회 성공")
+    @GetMapping
+    public ResponseEntity<List<PostItemDTO>> getAllPosts(PostParamsDTO postParamsDTO) {
+        postParamsDTO.nullCheck();
+        List<Post> posts = postDAORepository.findAllByPostParamsDTO(postParamsDTO.getPostTitle(), postParamsDTO.getLectureName(), postParamsDTO.getMajor(), postParamsDTO.getProfessor());
+
+        List<PostItemDTO> postItemDTOS = posts.stream().map(PostItemDTO::of).collect(Collectors.toList());
+
+        return ResponseEntity.ok(postItemDTOS);
+    }
+    @Operation(summary = "게시글 생성", description = "이미지와 게시글 정보를 받아 게시글을 생성합니다.(swagger작동안됌)")
+    @ApiResponse(responseCode = "200", description = "게시글 생성 성공")
+    @ApiResponse(responseCode = "400", description = "게시글 생성 실패", content = @Content(examples = @ExampleObject(value = "{\n" +
+            "  \"message\": \"User not found with id 1\",\n" +
+            "}")))
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<PostDTO> createPost(
+            @RequestPart(value = "pictures") List<MultipartFile> pictures,
+            @RequestPart(value = "data") PostFormDTO postFormDTO
+    ) {
+        Optional<User> user = userDAORepository.findById(postFormDTO.getUserId());
+        if(user.isEmpty()) {
+            throw new ResourceNotFoundException("User not found with id " + postFormDTO.getUserId());
+        }
+        Optional<Lecture> lecture = lectureDAORepository.findById(postFormDTO.getLectureId());
+        if(lecture.isEmpty()) {
+            throw new ResourceNotFoundException("Lecture not found with id " + postFormDTO.getLectureId());
+        }
+
+        Post post = new Post();
+        post.setWriter(user.get());
+        post.setLecture(lecture.get());
+        post.setPostTitle(postFormDTO.getPostTitle());
+        post.setPostContent(postFormDTO.getPostContent());
+        post.setPrice(postFormDTO.getPrice());
+
+
+        Post savedPost = postDAORepository.save(post);
+
+        try {
+            for (MultipartFile picture : pictures) {
+                String fileName = savedPost.getPostId() + "/" + picture.getOriginalFilename();
+                ObjectMetadata metadata = new ObjectMetadata();
+                metadata.setContentType(picture.getContentType());
+                metadata.setContentLength(picture.getSize());
+                //Upload to S3 with Public Read Permission
+                amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, picture.getInputStream(), metadata).withCannedAcl(CannedAccessControlList.PublicRead));
+                String fileUrl = amazonS3Client.getUrl(bucket, fileName).toString();
+                PostPicture postPicture = new PostPicture();
+                postPicture.setPost(savedPost);
+                postPicture.setPicture(fileUrl);
+            }
+        } catch (IOException e) {
+            throw new FileIsNotIOException("파일입출력에 실패했습니다.");
+        }
+
+        postPictureDAORepository.saveAll(savedPost.getPostPictures());
+        PostDTO postDTO = PostDTO.of(post);
+        return ResponseEntity.ok(postDTO);
     }
 
-    //Update a Post by ID
-    @PutMapping("/put/{postId}")
-    public ResponseEntity<Post> updatePost(@PathVariable Long postId, @RequestBody Post postDetails) {
-        Post updatedPost = postService.updatePost(postId, postDetails);
-        return ResponseEntity.ok(updatedPost);
+    @Operation(summary = "게시글 수정", description = "게시글 수정")
+    @ApiResponse(responseCode = "200", description = "게시글 수정 성공")
+    @ApiResponse(responseCode = "400", description = "게시글 수정 실패", content = @Content(examples = @ExampleObject(value = "{\n" +
+            "  \"message\": \"Post not found with id 1\",\n" +
+            "}")))
+    @PutMapping
+    public ResponseEntity<PostDTO> updatePost(@RequestBody PostUpdateDTO postUpdateDTO) {
+        Optional<Post> findPost = postDAORepository.findPostId(postUpdateDTO.getPostId());
+        if (findPost.isEmpty()) {
+            throw new ResourceNotFoundException("Post not found with id " + postUpdateDTO.getPostId());
+        }
+
+        //게시글 수정
+        Post post = findPost.get();
+        post.setPostTitle(postUpdateDTO.getPostTitle());
+        post.setPostContent(postUpdateDTO.getPostContent());
+        post.setPrice(postUpdateDTO.getPrice());
+
+
+        //강의 수정
+        if(!Objects.equals(post.getLecture().getLectureID(), postUpdateDTO.getLectureId())) {
+            Optional<Lecture> lecture = lectureDAORepository.findById(postUpdateDTO.getLectureId());
+            if(lecture.isEmpty()) {
+                throw new ResourceNotFoundException("Lecture not found with id " + postUpdateDTO.getLectureId());
+            }
+            post.setLecture(lecture.get());
+        }
+
+        //저장
+        Post savedPost = postDAORepository.save(post);
+        PostDTO postDTO = PostDTO.of(savedPost);
+        return ResponseEntity.ok(postDTO);
     }
 
-    // Delete a Post
-    @DeleteMapping("/delete/{postId}")
-    public ResponseEntity<?> deletePost(@PathVariable Long postId) {
-        postService.deletePost(postId);
-        return ResponseEntity.ok().build();
-    }
+    @Operation(summary = "게시글 삭제", description = "게시글 삭제")
+    @ApiResponse(responseCode = "200", description = "게시글 삭제 성공", content = @Content(examples = @ExampleObject(value = "{\n" +
+            "  \"message\": \"게시글 삭제 성공\",\n" +
+            "}")))
+    @ApiResponse(responseCode = "400", description = "게시글 삭제 실패", content = @Content(examples = @ExampleObject(value = "{\n" +
+            "  \"message\": \"Post not found with id 1\",\n" +
+            "}")))
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<Map<String,String>> deletePost(@PathVariable Long postId) {
+        Optional<Post> findPost = postDAORepository.findPostId(postId);
+        if (findPost.isEmpty()) {
+            throw new ResourceNotFoundException("Post not found with id " + postId);
+        }
 
-    //강의 찾기 api
-    @GetMapping("/title/{postTitle}")
-    public ResponseEntity<List<Post>> getPostsByTitle(@PathVariable String postTitle) {
-        List<Post> posts = postService.getPostsByTitle(postTitle);
-        return ResponseEntity.ok(posts);
-    }
+        //s3 사진들 삭제
+        ListObjectsV2Request request = new ListObjectsV2Request().withBucketName(bucket).withPrefix(postId + "/");
+        ListObjectsV2Result result = amazonS3Client.listObjectsV2(request);
+        List<DeleteObjectsRequest.KeyVersion> keyToDelete = new ArrayList<>();
+        for (S3ObjectSummary s3ObjectSummary : result.getObjectSummaries()) {
+            keyToDelete.add(new DeleteObjectsRequest.KeyVersion(s3ObjectSummary.getKey()));
+        }
+        // 모든 파일 삭제
+        if (!keyToDelete.isEmpty()) {
+            DeleteObjectsRequest deleteObjectsRequest = new DeleteObjectsRequest(bucket).withKeys(keyToDelete);
+            amazonS3Client.deleteObjects(deleteObjectsRequest);
+        }
 
-    @GetMapping("/lecture/{lectureName}")
-    public ResponseEntity<List<Post>> getPostsByLectureName(@PathVariable String lectureName) {
-        List<Post> posts = postService.getPostsByLectureName(lectureName);
-        return ResponseEntity.ok(posts);
-    }
-
-    @GetMapping("/professor/{professorName}")
-    public ResponseEntity<List<Post>> getPostsByProfessorName(@PathVariable String professorName) {
-        List<Post> posts = postService.getPostsByProfessorName(professorName);
-        return ResponseEntity.ok(posts);
-    }
-
-    @GetMapping("/major/{major}")
-    public ResponseEntity<List<Post>> getPostsByMajor(@PathVariable String major) {
-        List<Post> posts = postService.getPostsByMajor(major);
-        return ResponseEntity.ok(posts);
+        Post post = findPost.get();
+        postDAORepository.delete(post);
+        return ResponseEntity.ok(Map.of("message", "게시글 삭제 성공"));
     }
 }

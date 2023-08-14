@@ -1,8 +1,8 @@
 package com.devhive03.Model.DAO;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +10,7 @@ import java.util.List;
 @Entity
 @RequiredArgsConstructor
 @AllArgsConstructor
+@Getter @Setter
 @Table(name = "lectures")
 public class Lecture {
 

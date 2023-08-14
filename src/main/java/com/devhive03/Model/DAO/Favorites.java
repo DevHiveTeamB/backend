@@ -1,10 +1,13 @@
 package com.devhive03.Model.DAO;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.security.Timestamp;
 
 @Entity
+@Getter @Setter
 @Table(name = "favorites")
 public class Favorites {
 
@@ -13,11 +16,11 @@ public class Favorites {
     @Column(name = "favorite_id", nullable = false)
     private Long favoriteID;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
