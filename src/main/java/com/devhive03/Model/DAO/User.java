@@ -55,7 +55,7 @@ public class User {
     private Long ratingState;
 
     //게시글 연관관계
-    @OneToMany(mappedBy = "writer", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "writer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Post> posts = new ArrayList<>();
 
     //쪽지방 연관관계

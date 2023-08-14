@@ -1,11 +1,15 @@
 package com.devhive03.Model.DTO.User;
 
 import com.devhive03.Model.DAO.User;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserDTO {
     private Long id;
     private String username;
