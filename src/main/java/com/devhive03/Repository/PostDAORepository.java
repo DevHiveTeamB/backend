@@ -31,5 +31,4 @@ public interface PostDAORepository extends JpaRepository<Post, Long> {
     List<Post> findByLecture_ProfessorNameOrderByPostDateDesc(String professorName);
     List<Post> findByLecture_MajorOrderByPostDateDesc(String major);
   
-    List<Post> findAllByWriterId(Long userId);
 }
