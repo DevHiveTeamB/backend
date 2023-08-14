@@ -1,138 +1,97 @@
 package com.devhive03.Controller.api;
 
-import com.devhive03.Model.DAO.KakaoProfile;
-import com.devhive03.Model.DAO.OAuthToken;
+import com.devhive03.Controller.ExceptionControll.ResourceNotFoundException;
+import com.devhive03.Model.DAO.Post;
 import com.devhive03.Model.DAO.User;
+import com.devhive03.Model.DTO.User.UserDTO;
+import com.devhive03.Repository.PostDAORepository;
+import com.devhive03.Repository.UserDAORepository;
 import com.devhive03.Service.UserService;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
-import org.springframework.stereotype.Controller;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
-
-@JsonIgnoreProperties(ignoreUnknown=true)
-@Controller
+// 경로 설정
+@Tag(name = "사용자", description = "유저 API")
+@RestController
+@RequestMapping("/v1/user")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    @GetMapping("/auth/kakao/callback")
-    public @ResponseBody void kakaoCallback(String code) throws JsonProcessingException { //Data를 리턴해주는 controller 함수
+    @Autowired
+    private UserDAORepository userDAORepository;
 
-        //post방식으로 key=value 데이터를 요청(카카오쪽으로)
+    @Autowired
+    private PostDAORepository postDAORepository;
 
-        //HttpHeader 오브젝트 생성
-        RestTemplate rt = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-type","application/x-www-form-urlencoded;charset=utf-8");
-
-        //HttpBody 오브젝트 생성
-        MultiValueMap<String,String> params = new LinkedMultiValueMap<>();
-        params.add("grant_type","authorization_code");
-        params.add("client_id","1954fa99c4e993dc0ea405323d7f3bad");
-        params.add("redirect_url"," http://localhost:8080/auth/kakao/callback");
-        params.add("code",code);
-
-        //HttpHeader와 HttpBody를 하나의 오브젝트에 담기
-        HttpEntity<MultiValueMap<String,String>> kakaoTokenRequest=
-            new HttpEntity<>(params,headers);
-
-        //Http 요청하기-post방식으로 -그리고 response 변수와 응답 받음
-        //exchange라는 함수는 HttpEntity라는 오브젝트를 넣게 되있음
-        ResponseEntity<String> response = rt.exchange(
-                "https://kauth.kakao.com/oauth/token ",
-                HttpMethod.POST,
-                kakaoTokenRequest,
-                String.class
-
-        );
-
-        //Gson,Json Simple,ObjectMapper();
-        ObjectMapper objectMapper = new ObjectMapper();
-        OAuthToken oauthToken = objectMapper.readValue(response.getBody(), OAuthToken.class);
-        System.out.println("엑세스 토큰:"+oauthToken.getAccess_token());
-
-        //HttpHeader 오브젝트 생성
-        RestTemplate rt2 = new RestTemplate();
-        HttpHeaders headers2= new HttpHeaders();
-        headers2.add("Authorization","Bearer "+ oauthToken.getAccess_token());
-        headers2.add("Content-type","application/x-www-form-urlencoded;charset=utf-8");
-
-
-        //HttpHeader와 HttpBody를 하나의 오브젝트에 담기
-        HttpEntity<MultiValueMap<String,String>> kakaoProfileRequest2=
-                new HttpEntity<>(headers2);
-
-        //Http 요청하기-post방식으로 -그리고 response 변수와 응답 받음
-        //exchange라는 함수는 HttpEntity라는 오브젝트를 넣게 되있음
-        ResponseEntity<String> response2 = rt2.exchange(
-                "https://kapi.kakao.com/v2/user/me",
-                HttpMethod.POST,
-                kakaoProfileRequest2,
-                String.class
-        );
-        System.out.println(response2.getBody());
-
-        ObjectMapper objectMapper2 = new ObjectMapper();
-        KakaoProfile kakaoProfile = null;
-        try {
-            kakaoProfile = objectMapper2.readValue(response2.getBody(), KakaoProfile.class);
-        }catch(JsonMappingException e){
-            e.printStackTrace();
-        }catch (JsonProcessingException e){
-            e.printStackTrace();
+    //CORS 정책을 해결하기 위한 어노테이션
+    //모든 요청에 대해 허용
+    @CrossOrigin(origins = "*")
+    @GetMapping("/{userId}")
+    @Operation(summary = "유저 조회", description = "유저 조회")
+    @ApiResponse(responseCode = "200", description = "유저 조회 성공")
+    @ApiResponse(responseCode = "400", description = "유저 조회 실패", content = @Content(examples = @ExampleObject(value = "{\n" +
+            "  \"message\": \"User not found with id 1\",\n" +
+            "}")))
+    public @ResponseBody ResponseEntity<UserDTO> findUser(@PathVariable Long userId) {
+        // user id로 user 찾기
+        Optional<User> user = userDAORepository.findById(userId);
+        // user가 있는지 확인
+        if (user.isEmpty()) {
+            throw new ResourceNotFoundException("User ID : " + userId + " not found");
         }
-
-        //User 오브젝트: username,password,email
-        System.out.println("카카오 아이디(번호) : " + kakaoProfile.getId() );
-        System.out.println("카카오 이메일 : "+kakaoProfile.getKakao_account().getEmail());
-
-        //kakao 로그인 할 경우 자동으로 어플에서 아디와 비번만들어서 생성해줌
-        System.out.println("어플 유저네임 : "+kakaoProfile.getKakao_account().getEmail()+"_"+kakaoProfile.getId());
-
-        User kakaouser = User.builder()
-                .username(kakaoProfile.getProperties().getNickname())
-                .email(kakaoProfile.getKakao_account().getEmail())
-                .build();
-
-        System.out.println("kakaousername:"+kakaouser.getUsername());
-        System.out.println("kakaoemail:"+kakaouser.getEmail());
-
-        RestTemplate rt3 = new RestTemplate();
-        HttpHeaders headers3= new HttpHeaders();
-        headers3.add("Host"," localhost:5000");
-        headers3.add("Connection", "keep-alive");
-        headers3.add("Content-type"," application/json");
-        headers3.add("Content-Length", "200");
-
-
-        //가입자 혹은 비가입자 체크해서 처리
-        User originuser = userService.회원찾기(kakaouser.getUsername());
-
-        HttpEntity<MultiValueMap<String,String>> kakaoProfileRequest3 =
-                new HttpEntity<>(headers3, (MultiValueMap<String, String>) originuser);
-
-        if(originuser == null) {
-            User savedUser = userService.회원가입(kakaouser);
-            kakaoProfileRequest3 = new HttpEntity<>(headers3, (MultiValueMap<String, String>) savedUser);
-        }
-
-
-        ResponseEntity<String> response3 = rt3.exchange(
-                "https://login.com",
-                HttpMethod.POST,
-                kakaoProfileRequest3,
-                String.class);
+        return ResponseEntity.ok(UserDTO.of(user.get()));
     }
 
+    @CrossOrigin(origins = "*")
+    @PutMapping
+    @Operation(summary = "유저 업데이트", description = "주어진 유저 정보로 유저 업데이트")
+    @ApiResponse(responseCode = "200", description = "유저 업데이트 성공")
+    @ApiResponse(responseCode = "400", description = "유저 업데이트 실패", content = @Content(examples = @ExampleObject(value = "{\n" +
+            "  \"message\": \"User not found with id 1\",\n" +
+            "}")))
+    public ResponseEntity<UserDTO> updateUserData(@Valid @RequestBody UserDTO userDTO) {
+        Optional<User> findUser = userDAORepository.findById(userDTO.getId());
+        if (findUser.isEmpty()) {
+            throw new ResourceNotFoundException("User ID : " + userDTO.getId() + " not found");
+        }
+        return ResponseEntity.ok(UserDTO.of(userDAORepository.save(findUser.get().update(userDTO))));
+    }
 
+    //유저 삭제
+    @CrossOrigin(origins = "*")
+    @DeleteMapping("/{userId}")
+    @Operation(summary = "유저 삭제", description = "유저 삭제")
+    @ApiResponse(responseCode = "200", description = "유저 삭제 성공")
+    @ApiResponse(responseCode = "400", description = "유저 삭제 실패", content = @Content(examples = @ExampleObject(value = "{\n" +
+            "  \"message\": \"User not found with id 1\",\n" +
+            "}")))
+    public ResponseEntity<Map<String, String>> deleteUser(@PathVariable Long userId) {
+        Optional<User> findUser = userDAORepository.findById(userId);
+        if (findUser.isEmpty()) {
+            throw new ResourceNotFoundException("User ID : " + userId + " not found");
+        }
+        User user = findUser.get();
+
+        //게시글이 존재하면 게시글 먼저 지우라고 알려주기
+        List<Post> posts = postDAORepository.findAllByWriterId(userId);
+        if (!posts.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("message", "게시글이 존재합니다. 게시글을 먼저 삭제해주세요."));
+        }
+
+        userDAORepository.delete(user);
+        return ResponseEntity.ok(Map.of("message", "유저 삭제 성공"));
+    }
 }

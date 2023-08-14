@@ -1,0 +1,55 @@
+spring:
+  profiles:
+    include: S3-KEY
+  jpa:
+#    show-sql: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        connection:
+          characterEncoding: utf-8
+          CharSet: utf-8
+          useUnicode: true
+        format_sql: true
+        highlight_sql: true
+  datasource:
+    driverClassName: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://127.0.0.1:3306/dev01
+    username: root
+    password: 1234
+    #url: jdbc:mariadb://svc.sel3.cloudtype.app:31951/dev01?useUnicode=true&characterEncoding=utf8&characterSetResults=utf8
+    #username: user
+    #password: 1234
+
+  # use Spring-Swagger-Doc
+springDoc:
+  api-docs:
+    enabled: true
+    path: /api-docs
+  swagger-ui:
+    path: /swagger
+
+logging:
+  level:
+    org.springframework.web: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type: TRACE
+
+# Base Url 설정
+server:
+  servlet:
+    context-path: /api/
+
+# s3 설정
+cloud:
+  aws:
+    credentials:
+      accessKey: ${AWS_ACCESS_KEY}
+      secretKey: ${AWS_SECRET_KEY}
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    s3:
+      bucket: devhive
