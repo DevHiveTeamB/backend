@@ -40,7 +40,7 @@ public class MessageRoom {
     private MessageRoomsReport messageRoomsReport;
 
     //개인쪽지 연관관계
-    @OneToMany(mappedBy = "messageRooms")
+    @OneToMany(mappedBy = "messageRooms") //메시지룸안에 여러개의 메시지 존재
     private List<PrivateMessage> privateMessages = new ArrayList<>();
 
     // Getters and Setters

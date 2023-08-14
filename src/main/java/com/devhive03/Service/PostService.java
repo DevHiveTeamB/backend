@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -21,7 +23,6 @@ public class PostService {
     public Post createPost(Post post) {
         return postDAORepository.save(post);
     }
-
     // Read Single
     public Optional<Post> getPost(Long id) {
         return postDAORepository.findById(id);
