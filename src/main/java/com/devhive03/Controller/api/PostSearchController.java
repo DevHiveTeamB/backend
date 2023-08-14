@@ -19,22 +19,21 @@ public class PostSearchController {
 
     @GetMapping("/title/get/{postTitle}")
     public List<PostDetailDTO> getPostsByPostTitle(@PathVariable String postTitle) {
-        //?
         return Collections.unmodifiableList(postSearchService.getPostsByPostTitle(postTitle));
     }
+
     @GetMapping("/course/get/{lectureName}")
     public List<PostDetailDTO> getPostsBy_LectureName(@PathVariable String lectureName) {
-        //?
         return Collections.unmodifiableList(postSearchService.getPostsByLectureName(lectureName));
     }
+
     @GetMapping("/professor/get/{professorName}")
     public List<PostDetailDTO> getPostsByProfessorName(@PathVariable String professorName) {
-        //?
         return Collections.unmodifiableList(postSearchService.getPostsByProfessorName(professorName));
     }
+
     @GetMapping("/major/get/{major}")
     public List<PostDetailDTO> getPostsByMajor(@PathVariable String major) {
-        //?
         return Collections.unmodifiableList(postSearchService.getPostsByMajor(major));
     }
 }
