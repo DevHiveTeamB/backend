@@ -20,7 +20,11 @@ public interface PostDAORepository extends JpaRepository<Post, Long> {
     @Query("select p from Post p left join fetch p.postPictures left join fetch p.lecture l where p.postTitle like %:postTitle% or l.lectureName like %:lectureName% or l.major like %:major% or l.professorName like %:professor% order by p.postDate desc")
     List<Post> findAllByPostParamsDTO(@Param("postTitle") String postTitle, @Param("lectureName") String lectureName, @Param("major") String major, @Param("professor") String professor);
 
-    List<Post> findByLecture_LectureName(String lectureName);
-    List<Post> findByLecture_ProfessorName(String professorName);
-    List<Post> findByLecture_Major(String major);
+
+    @Query("select p from Post p left join fetch p.lecture l left join fetch p.postPictures left join fetch p.writer where p.postTitle like %:postTitle% order by p.postDate asc")
+    List<Post> findByPostTitle(@Param("postTitle") String postTitle);
+
+    List<Post> findByLecture_LectureNameOrderByPostDateDesc(String lectureName);
+    List<Post> findByLecture_ProfessorNameOrderByPostDateDesc(String professorName);
+    List<Post> findByLecture_MajorOrderByPostDateDesc(String major);
 }

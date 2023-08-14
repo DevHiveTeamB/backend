@@ -54,15 +54,4 @@ public class PostService {
     }
 
 
-    public List<Post> getPostsByLectureName(String lectureName) {
-        return postDAORepository.findByLecture_LectureName(lectureName);
-    }
-
-    public List<Post> getPostsByProfessorName(String professorName) {
-        return postDAORepository.findByLecture_ProfessorName(professorName);
-    }
-
-    public List<Post> getPostsByMajor(String major) {
-        return postDAORepository.findByLecture_Major(major);
-    }
 }
