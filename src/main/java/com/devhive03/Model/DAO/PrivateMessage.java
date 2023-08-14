@@ -28,5 +28,20 @@ public class PrivateMessage {
     @Column(name = "private_message_content_date")
     private Timestamp privateMessageContentDate;
 
+    public String getPrivateMessageContent() {
+        return privateMessageContent;
+    }
+
+    public void setPrivateMessageContent(String privateMessageContent) {
+        this.privateMessageContent = privateMessageContent;
+    }
+
+    public MessageRoom getMessageRooms() {
+        return messageRooms;
+    }
+    public void setMessageRooms(MessageRoom messageRooms) {
+        this.messageRooms = messageRooms;
+    }
+
     // Getters and Setters
 }

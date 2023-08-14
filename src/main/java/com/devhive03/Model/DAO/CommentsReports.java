@@ -19,7 +19,7 @@ public class CommentsReports {
     private Comments comments;
 
     @ManyToOne
-    @JoinColumn(name = "reporter_user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Column(name = "report_content")
