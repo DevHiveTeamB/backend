@@ -133,7 +133,7 @@ public class KakaoUserController {
         }
 
         //로그인 완료 화면으로 리다이렉트
-        RedirectView redirectView = new RedirectView("http://localhost:8081/about");
+        RedirectView redirectView = new RedirectView("http://localhost:8080/");
         //쿼리스트링으로 UserID를 보내줌
         redirectView.addStaticAttribute("userId", userId);
 

@@ -63,9 +63,9 @@ public class UserController {
             "  \"message\": \"User not found with id 1\",\n" +
             "}")))
     public ResponseEntity<UserDTO> updateUserData(@Valid @RequestBody UserDTO userDTO) {
-        Optional<User> findUser = userDAORepository.findById(userDTO.getId());
+        Optional<User> findUser = userDAORepository.findById(userDTO.getUserId());
         if (findUser.isEmpty()) {
-            throw new ResourceNotFoundException("User ID : " + userDTO.getId() + " not found");
+            throw new ResourceNotFoundException("User ID : " + userDTO.getUserId() + " not found");
         }
         return ResponseEntity.ok(UserDTO.of(userDAORepository.save(findUser.get().update(userDTO))));
     }

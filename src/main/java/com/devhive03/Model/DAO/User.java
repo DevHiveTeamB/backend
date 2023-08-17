@@ -46,13 +46,13 @@ public class User {
     private String introduction;
 
     @Column(name = "membership")
-    private Long membership;
+    private Long membership = 0L;
 
     @Column(name = "certification")
-    private Long certification;
+    private Long certification = 0L;
 
     @Column(name = "rating_state")
-    private Long ratingState;
+    private Long ratingState =0L;
 
     //게시글 연관관계
     @OneToMany(mappedBy = "writer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
