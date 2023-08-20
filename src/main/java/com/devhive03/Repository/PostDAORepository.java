@@ -16,7 +16,7 @@ public interface PostDAORepository extends JpaRepository<Post, Long> {
     @Query("select p from Post p left join fetch p.lecture left join fetch p.postPictures left join fetch p.writer where p.postId = :postId")
     Optional<Post> findPostId(@Param("postId") Long postId);
 
-    @Query("select p from Post p left join fetch p.postPictures where p.writer.id = :userId order by p.postDate desc")
+    @Query("select p from Post p left join fetch p.postPictures left join fetch p.lecture left join fetch p.writer where p.writer.id = :userId order by p.postDate desc")
     List<Post> findAllByWriterId(@Param("userId") Long userId);
 
     //title,lectureName, major, professor을 포함한 게시글 검색
