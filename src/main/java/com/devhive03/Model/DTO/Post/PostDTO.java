@@ -37,6 +37,7 @@ public class PostDTO {
                 .postDate(post.getPostDate())
                 .price(post.getPrice())
                 .hits(post.getHits())
+                .favorite(post.getFavorites().size())
                 .postPictures(PostPictureDTO.ofList(post.getPostPictures()))
                 .build();
     }
