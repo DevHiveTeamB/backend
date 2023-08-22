@@ -2,10 +2,12 @@ package com.devhive03.Model.DAO;
 
 import jakarta.persistence.*;
 import jakarta.websocket.OnMessage;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.security.Timestamp;
 
-@Entity
+@Entity @Getter @Setter
 @Table(name = "private_messages")
 public class PrivateMessage {
 
@@ -22,8 +24,9 @@ public class PrivateMessage {
     @JoinColumn(name = "message_writer_id", nullable = false)
     private User MessageWriter;
 
+
     @Column(name = "private_message_content")
-    private String privateMessageContent;
+    private String privateMessageContent; //메시지 최근 내용
 
     @Column(name = "private_message_content_date")
     private Timestamp privateMessageContentDate;
@@ -36,12 +39,12 @@ public class PrivateMessage {
         this.privateMessageContent = privateMessageContent;
     }
 
-    public MessageRoom getMessageRooms() {
-        return messageRooms;
-    }
-    public void setMessageRooms(MessageRoom messageRooms) {
+    public void setMessageRoom(MessageRoom messageRooms) {
+
         this.messageRooms = messageRooms;
     }
+
+
 
     // Getters and Setters
 }
