@@ -1,10 +1,14 @@
 package com.devhive03.Model.DAO;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.security.Timestamp;
 
 @Entity
+@Getter @Setter
 @Table(name = "SearchList")
 public class SearchList {
 
