@@ -8,6 +8,7 @@ import java.security.Timestamp;
 @Getter @Setter
 public class MessageRoomDTO {
     private Long lastMessageID;
+    private String lastMessageData;
     private Timestamp lastMessageDate;
     private Integer state;
     private Integer confirmationStatus;
