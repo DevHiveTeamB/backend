@@ -57,5 +57,13 @@ public class MessageRoom {
     public void setLastMessageDate(PrivateMessage lastMessage) {
         this.lastMessageDate = lastMessage.getPrivateMessageContentDate();
     }
+
+    public List<PrivateMessage> getPrivateMessages() {
+        return privateMessages;
+    }
+
+    public void setPrivateMessages(List<PrivateMessage> privateMessages) {
+        this.privateMessages = privateMessages;
+    }
     // Getters and Setters
 }
