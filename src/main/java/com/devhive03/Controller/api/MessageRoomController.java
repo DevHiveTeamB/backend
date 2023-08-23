@@ -1,6 +1,7 @@
 package com.devhive03.Controller.api;
 
 import com.devhive03.Model.DAO.MessageRoom;
+import com.devhive03.Model.DAO.PrivateMessage;
 import com.devhive03.Model.DTO.Message.MessageRoomDTO;
 import com.devhive03.Model.DTO.Message.UserMessageRoomResponse;
 import com.devhive03.Service.MessageRoomService;
@@ -39,5 +40,11 @@ public class MessageRoomController {
         userMessageRoomResponse.setMessageRoom(messageRoomDTOS);
 
         return ResponseEntity.ok(userMessageRoomResponse);
+    }
+
+    @GetMapping("/{messageRoomId}/messages")
+    public ResponseEntity<List<PrivateMessage>> getMessagesByMessageRoomId(@PathVariable Long messageRoomId) {
+        List<PrivateMessage> messages = messageRoomService.getMessagesByMessageRoomId(messageRoomId);
+        return ResponseEntity.ok(messages);
     }
 }

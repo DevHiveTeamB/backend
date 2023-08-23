@@ -7,7 +7,9 @@ import com.devhive03.Repository.PrivateMessageDAORepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MessageRoomService {
@@ -36,5 +38,18 @@ public class MessageRoomService {
     private PrivateMessage getLastMessageInRoom(Long roomId) {
         // 특정 쪽지방에 속한 모든 메시지를 시간순으로 정렬하고 가장 최근 메시지를 선택합니다.
         return privateMessageRepository.findTop1ByMessageRoomsIdOrderByPrivateMessageContentDateDesc(roomId);
+    }
+
+    public List<PrivateMessage> getMessagesByMessageRoomId(Long messageRoomId) {
+        // MessageRoomDAORepository에서 해당 메시지 룸을 조회합니다.
+        Optional<MessageRoom> messageRoomOptional = messageRoomRepository.findById(messageRoomId);
+
+        if (messageRoomOptional.isPresent()) {
+            MessageRoom messageRoom = messageRoomOptional.get();
+            return messageRoom.getPrivateMessages();
+        } else {
+            // 메시지 룸이 존재하지 않을 경우 빈 리스트 반환 또는 예외 처리
+            return Collections.emptyList(); // 빈 리스트 반환
+        }
     }
 }
