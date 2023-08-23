@@ -1,5 +1,6 @@
 package com.devhive03.Model.DAO;
 
+import com.devhive03.Model.DTO.Message.MessageRoomDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Setter @Getter
 @Table(name = "messagerooms")
 public class MessageRoom {
 
@@ -66,4 +68,14 @@ public class MessageRoom {
         this.privateMessages = privateMessages;
     }
     // Getters and Setters
+
+    public MessageRoomDTO toMessageRoomDTO() {
+        MessageRoomDTO dto = new MessageRoomDTO();
+        dto.setLastMessageID(this.roomID); // 이 부분은 정확한 필드가 무엇인지 모르기 때문에 예시로 작성했습니다. 실제 필드에 맞게 수정해야 합니다.
+        dto.setLastMessageData(this.lastMessageContent);
+        dto.setLastMessageDate(this.lastMessageDate);
+        dto.setState(this.state);
+        dto.setConfirmationStatus(this.confirmationStatus);
+        return dto;
+    }
 }
