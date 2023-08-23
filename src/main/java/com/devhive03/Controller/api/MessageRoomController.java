@@ -1,6 +1,8 @@
 package com.devhive03.Controller.api;
 
 import com.devhive03.Model.DAO.MessageRoom;
+import com.devhive03.Model.DTO.Message.MessageRoomDTO;
+import com.devhive03.Model.DTO.Message.UserMessageRoomResponse;
 import com.devhive03.Service.MessageRoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +11,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/message-rooms")
@@ -23,8 +27,17 @@ public class MessageRoomController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<MessageRoom>> getMessageRoomsByUserId(@PathVariable Long userId) {
+    public ResponseEntity<UserMessageRoomResponse> getMessageRoomsByUserId(@PathVariable Long userId) {
         List<MessageRoom> messageRooms = messageRoomService.getMessageRoomsByUserId(userId);
-        return ResponseEntity.ok(messageRooms);
+        UserMessageRoomResponse userMessageRoomResponse = new UserMessageRoomResponse();
+
+        List<MessageRoomDTO> messageRoomDTOS = messageRooms.stream()
+                                                            .map(MessageRoom::toMessageRoomDTO)
+                                                            .collect(Collectors.toList());
+
+        userMessageRoomResponse.setUserID(userId);
+        userMessageRoomResponse.setMessageRoom(messageRoomDTOS);
+
+        return ResponseEntity.ok(userMessageRoomResponse);
     }
 }
