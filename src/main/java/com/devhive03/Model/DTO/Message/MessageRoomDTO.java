@@ -7,7 +7,7 @@ import java.security.Timestamp;
 
 @Getter @Setter
 public class MessageRoomDTO {
-    private Long lastMessageID;
+    private Long roomID;
     private String lastMessageData;
     private Timestamp lastMessageDate;
     private Integer state;

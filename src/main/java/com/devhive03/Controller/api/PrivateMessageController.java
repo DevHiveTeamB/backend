@@ -23,7 +23,7 @@ public class PrivateMessageController {
         this.privateMessageService = privateMessageService;
     }
 
-    @PostMapping("/privatemessages/put")
+    @PostMapping("/privatemessages/post")
     public ResponseEntity<PrivateMessage> sendPrivateMessage(
             @RequestParam Long messageRoomId,
             @RequestParam Long messageWriterId,

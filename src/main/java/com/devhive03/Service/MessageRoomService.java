@@ -2,6 +2,7 @@ package com.devhive03.Service;
 
 import com.devhive03.Model.DAO.MessageRoom;
 import com.devhive03.Model.DAO.PrivateMessage;
+import com.devhive03.Model.DAO.User;
 import com.devhive03.Repository.MessageRoomDAORepository;
 import com.devhive03.Repository.PrivateMessageDAORepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,5 +52,15 @@ public class MessageRoomService {
             // 메시지 룸이 존재하지 않을 경우 빈 리스트 반환 또는 예외 처리
             return Collections.emptyList(); // 빈 리스트 반환
         }
+    }
+
+    public MessageRoom createMessageRoom(User buyer, User writer) {
+        MessageRoom messageRoom = new MessageRoom();
+        messageRoom.setBuyer(buyer);
+        messageRoom.setWriter(writer);
+
+        // 나머지 필드 설정
+
+        return messageRoomRepository.save(messageRoom);
     }
 }

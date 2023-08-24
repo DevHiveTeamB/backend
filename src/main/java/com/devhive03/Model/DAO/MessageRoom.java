@@ -71,7 +71,7 @@ public class MessageRoom {
 
     public MessageRoomDTO toMessageRoomDTO() {
         MessageRoomDTO dto = new MessageRoomDTO();
-        dto.setLastMessageID(this.roomID); // 이 부분은 정확한 필드가 무엇인지 모르기 때문에 예시로 작성했습니다. 실제 필드에 맞게 수정해야 합니다.
+        dto.setRoomID(this.roomID); // 이 부분은 정확한 필드가 무엇인지 모르기 때문에 예시로 작성했습니다. 실제 필드에 맞게 수정해야 합니다.
         dto.setLastMessageData(this.lastMessageContent);
         dto.setLastMessageDate(this.lastMessageDate);
         dto.setState(this.state);
