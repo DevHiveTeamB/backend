@@ -4,12 +4,8 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
 import com.devhive03.Controller.ExceptionControll.FileIsNotIOException;
 import com.devhive03.Controller.ExceptionControll.ResourceNotFoundException;
-import com.devhive03.Model.DAO.Lecture;
-import com.devhive03.Model.DAO.Post;
-import com.devhive03.Model.DAO.PostPicture;
-import com.devhive03.Model.DAO.User;
+import com.devhive03.Model.DAO.*;
 import com.devhive03.Model.DTO.Post.*;
-import com.devhive03.Model.DTO.User.UserWriterDTO;
 import com.devhive03.Repository.*;
 import com.devhive03.Service.PostService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -63,12 +59,8 @@ public class PostController {
         //PostDTO로 변환
         PostDTO postDTO = PostDTO.of(post);
 
-        //userId가 null이 아니면 좋아요, 찜 null
+        //userId가 null이 아니면 찜 null
         if (userId != null) {
-            //좋아요 여부
-            boolean isLike = post.getPostLikesLists().stream().anyMatch(postLikesList -> postLikesList.getUser().getId().equals(userId));
-            postDTO.setIsLike(isLike);
-
             //찜 여부
             boolean isFavorite = post.getFavorites().stream().anyMatch(favorites -> favorites.getUser().getId().equals(userId));
             postDTO.setIsFavorite(isFavorite);
@@ -84,21 +76,13 @@ public class PostController {
             "  \"message\": \"User not found with id 1\",\n" +
             "}")))
     @GetMapping(value = "/writer/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PostsDTO> getAllPostBy(@PathVariable("userId") Long userID) {
+    public ResponseEntity<List<PostItemDTO>> getAllPostBy(@PathVariable("userId") Long userID) {
+
         List<Post> posts = postDAORepository.findAllByWriterId(userID);
-
-        Optional<User> findWriter = userDAORepository.findById(userID);
-
-        if(findWriter.isEmpty()) {
-            throw new ResourceNotFoundException("User not found with id " + userID);
-        }
-
-        UserWriterDTO userWriterDTO = UserWriterDTO.of(findWriter.get());
 
         List<PostItemDTO> postItemDTOS = posts.stream().map(PostItemDTO::of).collect(Collectors.toList());
 
-        PostsDTO postsDTO = new PostsDTO(userWriterDTO, postItemDTOS);
-        return ResponseEntity.ok(postsDTO);
+        return ResponseEntity.ok(postItemDTOS);
     }
 
     // Get All Posts

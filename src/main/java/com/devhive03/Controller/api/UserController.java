@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 // 경로 설정
 @Tag(name = "사용자", description = "유저 API")
@@ -36,9 +37,18 @@ public class UserController {
     @Autowired
     private PostDAORepository postDAORepository;
 
-    //CORS 정책을 해결하기 위한 어노테이션
+    //모든 유저 조회
+    @GetMapping
+    @Operation(summary = "유저 전체 조회", description = "유저 전체 조회")
+    @ApiResponse(responseCode = "200", description = "유저 전체 조회 성공")
+    public @ResponseBody ResponseEntity<List<UserDTO>> findAllUser() {
+        List<User> userList = userDAORepository.findAll();
+        List<UserDTO> collect = userList.stream().map(UserDTO::of).collect(Collectors.toList());
+        return ResponseEntity.ok(collect);
+    }
+
+
     //모든 요청에 대해 허용
-    @CrossOrigin(origins = "*")
     @GetMapping("/{userId}")
     @Operation(summary = "유저 조회", description = "유저 조회")
     @ApiResponse(responseCode = "200", description = "유저 조회 성공")
@@ -55,7 +65,6 @@ public class UserController {
         return ResponseEntity.ok(UserDTO.of(user.get()));
     }
 
-    @CrossOrigin(origins = "*")
     @PutMapping
     @Operation(summary = "유저 업데이트", description = "주어진 유저 정보로 유저 업데이트")
     @ApiResponse(responseCode = "200", description = "유저 업데이트 성공")
@@ -63,15 +72,14 @@ public class UserController {
             "  \"message\": \"User not found with id 1\",\n" +
             "}")))
     public ResponseEntity<UserDTO> updateUserData(@Valid @RequestBody UserDTO userDTO) {
-        Optional<User> findUser = userDAORepository.findById(userDTO.getId());
+        Optional<User> findUser = userDAORepository.findById(userDTO.getUserId());
         if (findUser.isEmpty()) {
-            throw new ResourceNotFoundException("User ID : " + userDTO.getId() + " not found");
+            throw new ResourceNotFoundException("User ID : " + userDTO.getUserId() + " not found");
         }
         return ResponseEntity.ok(UserDTO.of(userDAORepository.save(findUser.get().update(userDTO))));
     }
 
     //유저 삭제
-    @CrossOrigin(origins = "*")
     @DeleteMapping("/{userId}")
     @Operation(summary = "유저 삭제", description = "유저 삭제")
     @ApiResponse(responseCode = "200", description = "유저 삭제 성공")
