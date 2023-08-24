@@ -24,9 +24,8 @@ public class PrivateMessage {
     @JoinColumn(name = "message_writer_id", nullable = false)
     private User MessageWriter;
 
-
     @Column(name = "private_message_content")
-    private String privateMessageContent; //메시지 최근 내용
+    private String privateMessageContent;
 
     @Column(name = "private_message_content_date")
     private Timestamp privateMessageContentDate;
