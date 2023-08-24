@@ -23,10 +23,6 @@ public class MessageRoom {
     @JoinColumn(name = "buyer_id", nullable = false)
     private User buyer;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "writer_id", nullable = false)
-    private User writer;
-
     @OneToOne(mappedBy = "messageRoom", fetch = FetchType.LAZY)
     private Post post;
 

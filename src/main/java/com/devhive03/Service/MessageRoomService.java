@@ -1,6 +1,7 @@
 package com.devhive03.Service;
 
 import com.devhive03.Model.DAO.MessageRoom;
+import com.devhive03.Model.DAO.Post;
 import com.devhive03.Model.DAO.PrivateMessage;
 import com.devhive03.Model.DAO.User;
 import com.devhive03.Repository.MessageRoomDAORepository;
@@ -24,7 +25,7 @@ public class MessageRoomService {
 
     public List<MessageRoom> getMessageRoomsByUserId(Long userId) {
         // 유저 아이디로 쪽지방을 가져옵니다.
-        List<MessageRoom> messageRooms = messageRoomRepository.findAllByBuyerIdOrWriterId(userId, userId);
+        List<MessageRoom> messageRooms = messageRoomRepository.findAllByBuyerIdOrPostWriterId(userId, userId);
 
         // 각 쪽지방의 마지막 메시지를 가져오고, 이를 각 쪽지방에 추가합니다.
         for (MessageRoom room : messageRooms) {
@@ -54,13 +55,14 @@ public class MessageRoomService {
         }
     }
 
-    public MessageRoom createMessageRoom(User buyer, User writer) {
+    public MessageRoom createMessageRoom(Post post, User buyer) {
         MessageRoom messageRoom = new MessageRoom();
         messageRoom.setBuyer(buyer);
-        messageRoom.setWriter(writer);
+        messageRoom.setPost(post);
 
         // 나머지 필드 설정
+        messageRoomRepository.save(messageRoom);
 
-        return messageRoomRepository.save(messageRoom);
+        return messageRoom;
     }
 }

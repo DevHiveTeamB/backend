@@ -1,10 +1,12 @@
 package com.devhive03.Controller.api;
 
 import com.devhive03.Model.DAO.MessageRoom;
+import com.devhive03.Model.DAO.Post;
 import com.devhive03.Model.DAO.PrivateMessage;
 import com.devhive03.Model.DAO.User;
 import com.devhive03.Model.DTO.Message.MessageRoomDTO;
 import com.devhive03.Model.DTO.Message.UserMessageRoomResponse;
+import com.devhive03.Repository.PostDAORepository;
 import com.devhive03.Service.MessageRoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,7 @@ public class MessageRoomController {
 
     private final MessageRoomService messageRoomService;
     private UserDAORepository userDAORepository;
+    private PostDAORepository postDAORepository;
 
     @Autowired
     public MessageRoomController(MessageRoomService messageRoomService) {
@@ -53,16 +56,16 @@ public class MessageRoomController {
     //메시지룸 생성
     @PostMapping("/messagerooms/post") //프론트에서는 확인만하면되니까 굳이 DTO로 할 필요 X
     public ResponseEntity<MessageRoom> createMessageRoom(
-            @RequestParam Long buyerId,
-            @RequestParam Long writerId
+            @RequestParam Long postId,
+            @RequestParam Long buyerId
     ) {
         // buyerId와 writerId를 사용하여 User 엔티티를 가져옵니다.
+        Post post = postDAORepository.findById(postId).orElse(null);
         User buyer = userDAORepository.findById(buyerId).orElse(null);
-        User writer = userDAORepository.findById(writerId).orElse(null);
 
 
-        if (buyer != null && writer != null) {
-            MessageRoom messageRoom = messageRoomService.createMessageRoom(buyer, writer);
+        if (post.getWriter().getId() != null && buyer != null) {
+            MessageRoom messageRoom = messageRoomService.createMessageRoom(post, buyer);
             return ResponseEntity.ok(messageRoom);
         } else {
             return ResponseEntity.notFound().build();
