@@ -3,10 +3,8 @@ package com.devhive03.Controller.api;
 import com.devhive03.Model.DAO.MessageRoom;
 import com.devhive03.Model.DAO.PrivateMessage;
 import com.devhive03.Model.DAO.User;
-import com.devhive03.Repository.PrivateMessageDAORepository;
 import com.devhive03.Service.PrivateMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.devhive03.Repository.MessageRoomDAORepository;
@@ -15,16 +13,18 @@ import com.devhive03.Repository.UserDAORepository;
 @RestController
 public class PrivateMessageController {
     private final PrivateMessageService privateMessageService;
-    private MessageRoomDAORepository messageRoomDAORepository;
-    private UserDAORepository userDAORepository;
+    private final MessageRoomDAORepository messageRoomDAORepository;
+    private final UserDAORepository userDAORepository;
 
     @Autowired
-    public PrivateMessageController(PrivateMessageService privateMessageService) {
+    public PrivateMessageController(PrivateMessageService privateMessageService, MessageRoomDAORepository messageRoomDAORepository, UserDAORepository userDAORepository) {
         this.privateMessageService = privateMessageService;
+        this.messageRoomDAORepository = messageRoomDAORepository;
+        this.userDAORepository = userDAORepository;
     }
 
     @PostMapping("/privatemessages/post")
-    public ResponseEntity<PrivateMessage> sendPrivateMessage(
+    public String sendPrivateMessage(
             @RequestParam Long messageRoomId,
             @RequestParam Long messageWriterId,
             @RequestParam String content
@@ -36,9 +36,9 @@ public class PrivateMessageController {
 
         if (messageRoom != null && messageWriter != null) {
             PrivateMessage privateMessage = privateMessageService.sendPrivateMessage(messageRoom, messageWriter, content);
-            return ResponseEntity.ok(privateMessage);
+            return "{\"message\":\"success\"}";
         } else {
-            return ResponseEntity.notFound().build();
+            return "{\"message\":\"false\"}";
         }
     }
 }
