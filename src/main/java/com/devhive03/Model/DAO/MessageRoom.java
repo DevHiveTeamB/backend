@@ -1,6 +1,8 @@
 package com.devhive03.Model.DAO;
 
 import com.devhive03.Model.DTO.Message.MessageRoomDTO;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,7 +25,9 @@ public class MessageRoom {
     @JoinColumn(name = "buyer_id", nullable = false)
     private User buyer;
 
-    @OneToOne(mappedBy = "messageRoom", fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    @JsonManagedReference
     private Post post;
 
     @Column(name = "last_message")
