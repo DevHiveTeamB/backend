@@ -51,6 +51,9 @@ public class Post {
     @Column(name = "hits")
     private Integer hits = 0;
 
+    @Column(name = "isSale", nullable = false)
+    private Boolean isSale = false;
+
     //쪽지방 연관관계
     @OneToOne(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonBackReference

@@ -23,6 +23,7 @@ public class PostDTO {
     private Integer price;
     private Integer hits;
     private List<PostPictureDTO> postPictures;
+    private Boolean isSale;
     //favorite 수
     private Integer favorite;
     private Boolean isFavorite;
@@ -39,6 +40,7 @@ public class PostDTO {
                 .hits(post.getHits())
                 .favorite(post.getFavorites().size())
                 .postPictures(PostPictureDTO.ofList(post.getPostPictures()))
+                .isSale(post.getIsSale())
                 .build();
     }
 }

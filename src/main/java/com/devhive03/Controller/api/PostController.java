@@ -213,4 +213,26 @@ public class PostController {
         postDAORepository.delete(post);
         return ResponseEntity.ok(Map.of("message", "게시글 삭제 성공"));
     }
+
+    // Post isSale true
+    @Operation(summary = "게시글 판매중으로 변경", description = "게시글 판매중으로 변경")
+    @ApiResponse(responseCode = "200", description = "게시글 판매중으로 변경 성공", content = @Content(examples = @ExampleObject(value = "{\n" +
+            "  \"message\": \"success\",\n" +
+            "}")))
+    @ApiResponse(responseCode = "400", description = "게시글 판매중으로 변경 실패", content = @Content(examples = @ExampleObject(value = "{\n" +
+            "  \"message\": \"Post not found with id 1\",\n" +
+            "}")))
+    @PutMapping("/sale/{postId}")
+    public ResponseEntity<Map<String,String>> updatePostSale(@PathVariable("postId") Long postId) {
+        Optional<Post> findPost = postDAORepository.findById(postId);
+        if (findPost.isEmpty()) {
+            throw new ResourceNotFoundException("Post not found with id " + postId);
+        }
+
+        Post post = findPost.get();
+        post.setIsSale(true);
+        postDAORepository.save(post);
+        Map<String, String> message = Map.of("message", "success");
+        return ResponseEntity.ok(message);
+    }
 }
