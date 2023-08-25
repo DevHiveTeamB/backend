@@ -5,6 +5,7 @@ import com.devhive03.Model.DAO.Post;
 import com.devhive03.Model.DAO.PrivateMessage;
 import com.devhive03.Model.DAO.User;
 import com.devhive03.Model.DTO.Message.MessageRoomDTO;
+import com.devhive03.Model.DTO.Message.PrivateMessageDTO;
 import com.devhive03.Model.DTO.Message.UserMessageRoomResponse;
 import com.devhive03.Repository.PostDAORepository;
 import com.devhive03.Service.MessageRoomService;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.devhive03.Repository.UserDAORepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,9 +52,21 @@ public class MessageRoomController {
 
     //메시지룸 전체 조회
     @GetMapping("/messages/{messageRoomId}")
-    public ResponseEntity<List<PrivateMessage>> getMessagesByMessageRoomId(@PathVariable Long messageRoomId) {
+    public ResponseEntity<List<PrivateMessageDTO>> getMessagesByMessageRoomId(@PathVariable Long messageRoomId) {
         List<PrivateMessage> messages = messageRoomService.getMessagesByMessageRoomId(messageRoomId);
-        return ResponseEntity.ok(messages);
+        List<PrivateMessageDTO> privateMessageDTOS = new ArrayList<>();
+
+        for(PrivateMessage privateMessage : messages){
+            PrivateMessageDTO privateMessageDTO = new PrivateMessageDTO();
+
+            privateMessageDTO.setMessageID(privateMessage.getMessageID());
+            privateMessageDTO.setMessageWriterId(privateMessage.getMessageWriter().getId()); // User의 ID만 설정
+            privateMessageDTO.setPrivateMessageContent(privateMessage.getPrivateMessageContent()); // 수정된 부분
+
+            privateMessageDTOS.add(privateMessageDTO);
+        }
+
+        return ResponseEntity.ok(privateMessageDTOS);
     }
     
     //메시지룸 생성

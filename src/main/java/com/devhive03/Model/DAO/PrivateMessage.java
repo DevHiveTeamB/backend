@@ -7,7 +7,8 @@ import lombok.Setter;
 
 import java.security.Timestamp;
 
-@Entity @Getter @Setter
+@Entity
+@Getter @Setter
 @Table(name = "private_messages")
 public class PrivateMessage {
 
