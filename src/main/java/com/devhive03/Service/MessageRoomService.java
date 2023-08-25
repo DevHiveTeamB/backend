@@ -31,7 +31,6 @@ public class MessageRoomService {
         for (MessageRoom room : messageRooms) {
             PrivateMessage lastMessage = getLastMessageInRoom(room.getId());
             room.setLastMessage(lastMessage);
-            room.setLastMessageDate(lastMessage);
         }
 
         return messageRooms;
@@ -60,9 +59,7 @@ public class MessageRoomService {
         messageRoom.setBuyer(buyer);
         messageRoom.setPost(post);
 
-        // 나머지 필드 설정
         messageRoomRepository.save(messageRoom);
-
         return messageRoom;
     }
 }

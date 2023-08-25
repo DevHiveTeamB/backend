@@ -25,9 +25,8 @@ public class MessageRoom {
     @JoinColumn(name = "buyer_id", nullable = false)
     private User buyer;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
-    @JsonManagedReference
     private Post post;
 
     @Column(name = "last_message")
@@ -35,12 +34,6 @@ public class MessageRoom {
 
     @Column(name = "last_message_date")
     private Timestamp lastMessageDate;
-
-    @Column(name = "state")
-    private Integer state;
-
-    @Column(name = "confirmation_status")
-    private Integer confirmationStatus;
 
     //쪽지방 신고 연관관계
     @OneToOne(mappedBy = "reportedMessageRooms", fetch = FetchType.LAZY)
@@ -56,9 +49,7 @@ public class MessageRoom {
     public void setLastMessage(PrivateMessage lastMessage) {
         this.lastMessageContent = lastMessage.getPrivateMessageContent();
     }
-    public void setLastMessageDate(PrivateMessage lastMessage) {
-        this.lastMessageDate = lastMessage.getPrivateMessageContentDate();
-    }
+
 
     public List<PrivateMessage> getPrivateMessages() {
         return privateMessages;
@@ -74,8 +65,6 @@ public class MessageRoom {
         dto.setRoomID(this.roomID); // 이 부분은 정확한 필드가 무엇인지 모르기 때문에 예시로 작성했습니다. 실제 필드에 맞게 수정해야 합니다.
         dto.setLastMessageData(this.lastMessageContent);
         dto.setLastMessageDate(this.lastMessageDate);
-        dto.setState(this.state);
-        dto.setConfirmationStatus(this.confirmationStatus);
         return dto;
     }
 }

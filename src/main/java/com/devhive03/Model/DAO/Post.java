@@ -55,9 +55,8 @@ public class Post {
     private Boolean isSale = false;
 
     //쪽지방 연관관계
-    @OneToOne(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonBackReference
-    private MessageRoom messageRoom;
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
+    private List<MessageRoom> messageRooms= new ArrayList<>();
 
     //게시글 사진 연관관계
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
