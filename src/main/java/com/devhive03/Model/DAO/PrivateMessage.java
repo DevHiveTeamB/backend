@@ -5,7 +5,7 @@ import jakarta.websocket.OnMessage;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 
 @Entity
 @Getter @Setter
@@ -29,7 +29,7 @@ public class PrivateMessage {
     private String privateMessageContent;
 
     @Column(name = "private_message_content_date")
-    private Timestamp privateMessageContentDate;
+    private Timestamp privateMessageContentDate = new java.sql.Timestamp(System.currentTimeMillis());;
 
     public String getPrivateMessageContent() {
         return privateMessageContent;

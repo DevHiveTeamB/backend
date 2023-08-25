@@ -10,8 +10,6 @@ public class MessageRoomDTO {
     private Long roomID;
     private String lastMessageData;
     private Timestamp lastMessageDate;
-    private Integer state;
-    private Integer confirmationStatus;
 
     //... MessageRoom Class ...
 
