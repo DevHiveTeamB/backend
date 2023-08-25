@@ -33,4 +33,5 @@ public class Lecture {
     private List<Post> posts = new ArrayList<>();
 
     // Getters and Setters
+    
 }

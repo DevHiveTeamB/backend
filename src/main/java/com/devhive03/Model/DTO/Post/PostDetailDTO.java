@@ -1,6 +1,7 @@
 package com.devhive03.Model.DTO.Post;
 
 import com.devhive03.Model.DAO.Lecture;
+import com.devhive03.Model.DTO.Lecture.LectureDTO;
 import lombok.*;
 
 import java.sql.Timestamp;
@@ -14,6 +15,6 @@ public class PostDetailDTO {
     private Timestamp postDate;
     private Integer price;
     private Integer hits;
-    private Lecture lecture;
+    private LectureDTO lecture;
     // getters and setters
 }

@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 
 @Entity
 @Getter @Setter
@@ -13,6 +13,10 @@ import java.security.Timestamp;
 public class SearchList {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "search_id")
+    private Long id;
+
     @Column(name = "search_data")
     private String searchData;
 
@@ -21,7 +25,7 @@ public class SearchList {
     private User user;
 
     @Column(name = "search_date")
-    private Timestamp searchDate;
+    private Timestamp searchDate = new Timestamp(System.currentTimeMillis());;
 
     // Getters and Setters
 }
