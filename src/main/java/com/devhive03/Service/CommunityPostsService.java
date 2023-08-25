@@ -1,8 +1,12 @@
 package com.devhive03.Service;
 
 import com.devhive03.Model.DAO.CommunityPosts;
+import com.devhive03.Model.DAO.User;
+import com.devhive03.Model.DTO.CommunityPost.CommunityPostsRequestDTO;
 import com.devhive03.Repository.CommunityPostsDAORepository;
+import com.devhive03.Repository.UserDAORepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,11 +19,30 @@ import java.util.Optional;
 public class CommunityPostsService {
 
     private final CommunityPostsDAORepository communityPostsDAORepository;
+    private final UserDAORepository userDAORepository;
 
-    // Create
-    public CommunityPosts createCommunityPost(CommunityPosts communityPost) {
-        return communityPostsDAORepository.save(communityPost);
+
+    public CommunityPosts createCommunityPost(CommunityPostsRequestDTO communityPostRequest) throws Exception {
+        CommunityPosts communityPost = new CommunityPosts();
+
+        // Convert DTO to Entity
+        Optional<User> writerOpt = userDAORepository.findById(communityPostRequest.getWriterID());
+
+        if (!writerOpt.isPresent()) {
+            throw new Exception("User not found with provided writerID");
+        }
+
+        communityPost.setWriter(writerOpt.get());
+        communityPost.setCommunityPostTitle(communityPostRequest.getCommunityPostTitle());
+        communityPost.setCommunityPostContent(communityPostRequest.getCommunityPostContent());
+
+        try {
+            return communityPostsDAORepository.save(communityPost);
+        } catch (Exception e) {
+            throw new Exception("Error occurred while saving the CommunityPost", e);
+        }
     }
+
 
     // Read Single
     public Optional<CommunityPosts> getCommunityPost(Long id) {
@@ -37,11 +60,11 @@ public class CommunityPostsService {
     }
 
     // Update
-    public CommunityPosts updateCommunityPost(Long communityPostID, CommunityPosts communityPostDetails) {
+    public CommunityPosts updateCommunityPost(Long communityPostID, CommunityPostsRequestDTO communityPostRequest) {
         return communityPostsDAORepository.findById(communityPostID)
                 .map(communityPost -> {
-                    communityPost.setCommunityPostTitle(communityPostDetails.getCommunityPostTitle());
-                    communityPost.setCommunityPostContent(communityPostDetails.getCommunityPostContent());
+                    communityPost.setCommunityPostTitle(communityPostRequest.getCommunityPostTitle());
+                    communityPost.setCommunityPostContent(communityPostRequest.getCommunityPostContent());
                     // Add the rest of the post fields here
                     return communityPostsDAORepository.save(communityPost);
                 })

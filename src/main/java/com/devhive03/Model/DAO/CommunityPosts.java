@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,14 +32,13 @@ public class CommunityPosts {
     private String communityPostContent;
 
     @Column(name = "communitypost_date")
-    private Timestamp communityPostDate;
+    private Timestamp communityPostDate = new java.sql.Timestamp(System.currentTimeMillis());;
 
     @Column(name = "communitypost_likes")
-    private Integer communityPostLikes;
+    private Long communityPostLikes;
 
-    //커뮤니티 글 사진 연관관계
-    @OneToMany(mappedBy = "communityPost")
-    private List<CommunityPostspicture> communityPostspictures = new ArrayList<>();
+    @Column(name = "isCommunityPostLikes")
+    private Boolean isCommunityPostLikes;
 
     //커뮤니티 글 신고 연관관계
     @OneToMany(mappedBy = "communityPost")
