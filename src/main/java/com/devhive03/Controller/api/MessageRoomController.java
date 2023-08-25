@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.devhive03.Repository.UserDAORepository;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,12 +22,14 @@ import java.util.stream.Collectors;
 public class MessageRoomController {
 
     private final MessageRoomService messageRoomService;
-    private UserDAORepository userDAORepository;
-    private PostDAORepository postDAORepository;
+    private final UserDAORepository userDAORepository;
+    private final PostDAORepository postDAORepository;
 
     @Autowired
-    public MessageRoomController(MessageRoomService messageRoomService) {
+    public MessageRoomController(MessageRoomService messageRoomService, UserDAORepository userDAORepository, PostDAORepository postDAORepository) {
         this.messageRoomService = messageRoomService;
+        this.userDAORepository = userDAORepository;
+        this.postDAORepository = postDAORepository;
     }
 
     //user에 속하는 메시지룸들 정보 조회
@@ -55,7 +57,7 @@ public class MessageRoomController {
     
     //메시지룸 생성
     @PostMapping("/messagerooms/post") //프론트에서는 확인만하면되니까 굳이 DTO로 할 필요 X
-    public ResponseEntity<MessageRoom> createMessageRoom(
+    public String createMessageRoom(
             @RequestParam Long postId,
             @RequestParam Long buyerId
     ) {
@@ -66,9 +68,9 @@ public class MessageRoomController {
 
         if (post.getWriter().getId() != null && buyer != null) {
             MessageRoom messageRoom = messageRoomService.createMessageRoom(post, buyer);
-            return ResponseEntity.ok(messageRoom);
+            return "{\"message\":\"success\"}";
         } else {
-            return ResponseEntity.notFound().build();
+            return "{\"message\":\"false\"}";
         }
     }
 }

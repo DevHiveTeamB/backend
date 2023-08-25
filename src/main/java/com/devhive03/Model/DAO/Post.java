@@ -1,5 +1,7 @@
 package com.devhive03.Model.DAO;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -50,8 +52,8 @@ public class Post {
     private Integer hits = 0;
 
     //쪽지방 연관관계
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "message_room_id")
+    @OneToOne(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference
     private MessageRoom messageRoom;
 
     //게시글 사진 연관관계
