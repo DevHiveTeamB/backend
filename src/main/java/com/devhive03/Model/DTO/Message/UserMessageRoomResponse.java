@@ -9,6 +9,8 @@ import java.util.List;
 
 public class UserMessageRoomResponse {
     private Long userID;
+    private String profilePhoto;
+    private String username;
     private List<MessageRoomDTO> messageRoom;
 
     // Constructors, Getters, and Setters

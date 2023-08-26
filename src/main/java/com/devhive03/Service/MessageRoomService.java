@@ -34,11 +34,15 @@ public class MessageRoomService {
         }
 
         return messageRooms;
+
+
     }
 
-    private PrivateMessage getLastMessageInRoom(Long roomId) {
-        // 특정 쪽지방에 속한 모든 메시지를 시간순으로 정렬하고 가장 최근 메시지를 선택합니다.
-        return privateMessageRepository.findTop1ByMessageRoomsIdOrderByPrivateMessageContentDateDesc(roomId);
+    public PrivateMessage getLastMessageInRoom(Long roomId) {
+        // roomId에 해당하는 쪽지방에서 가장 최근의 메시지를 찾는 쿼리를 작성
+
+        PrivateMessage lastMessage = privateMessageRepository.findFirstByMessageRoomsRoomIDOrderByPrivateMessageContentDateDesc(roomId);
+        return lastMessage;
     }
 
     public List<PrivateMessage> getMessagesByMessageRoomId(Long messageRoomId) {
@@ -52,6 +56,11 @@ public class MessageRoomService {
             // 메시지 룸이 존재하지 않을 경우 빈 리스트 반환 또는 예외 처리
             return Collections.emptyList(); // 빈 리스트 반환
         }
+    }
+
+    public MessageRoom findMessageRoom(Post post, User buyer) {
+        // 해당 게시물과 구매자에 대한 메시지 룸을 찾습니다.
+        return messageRoomRepository.findByPostAndBuyer(post, buyer);
     }
 
     public MessageRoom createMessageRoom(Post post, User buyer) {

@@ -18,7 +18,7 @@ public class PrivateMessage {
     private Long messageID;
 
     @ManyToOne
-    @JoinColumn(name = "messagerooms_id", nullable = false)
+    @JoinColumn(name = "messagerooms_id")
     private MessageRoom messageRooms;
 
     @ManyToOne
@@ -31,9 +31,7 @@ public class PrivateMessage {
     @Column(name = "private_message_content_date")
     private Timestamp privateMessageContentDate = new java.sql.Timestamp(System.currentTimeMillis());;
 
-    public String getPrivateMessageContent() {
-        return privateMessageContent;
-    }
+
 
     public void setPrivateMessageContent(String privateMessageContent) {
         this.privateMessageContent = privateMessageContent;
@@ -43,7 +41,6 @@ public class PrivateMessage {
 
         this.messageRooms = messageRooms;
     }
-
 
 
     // Getters and Setters
