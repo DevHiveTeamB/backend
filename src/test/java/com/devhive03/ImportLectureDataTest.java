@@ -13,6 +13,8 @@ public class ImportLectureDataTest {
 
     @Test
     public void datatest(){
-        lectureService.readFromExcel("D:\\devhiveLectureData\\교양.xls");
+        lectureService.readFromExcel("D:\\devhiveLectureData\\교양.xls", "교양");
+        lectureService.readFromExcel("D:\\devhiveLectureData\\소프트웨어.xls", "소프트웨어");
+        lectureService.readFromExcel("D:\\devhiveLectureData\\컴공.xls", "컴공");
     }
 }
