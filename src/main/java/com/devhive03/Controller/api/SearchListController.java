@@ -38,4 +38,11 @@ public class SearchListController {
         searchListService.saveSearchRecord(search, userId);
         return "{\"message\":\"success\"}";
     }
+
+    @Operation(summary = "최근검색삭제, 검색어랑 유저 아이디를 입력하면 됨")
+    @DeleteMapping("/user/delete")
+    public String deleteUserSearchList(@RequestBody String searchData, @Parameter Long userID) {
+        searchListService.deleteByUserIdAndSearchData(userID, searchData);
+        return "{\"message\":\"success\"}";
+    }
 }

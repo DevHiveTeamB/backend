@@ -11,4 +11,5 @@ public interface SearchListDAORepository extends JpaRepository<SearchList, Strin
     List<SearchList> findAllByUser_IdOrderBySearchDateDesc(Long userId);
     List<SearchList> findByUserOrderBySearchDateAsc(User user);
     Optional<SearchList> findBySearchDataAndUser(String searchData, User user);
+    void deleteByUserAndSearchData(User user, String searchData);
 }
