@@ -6,6 +6,7 @@ import com.devhive03.Repository.SearchListDAORepository;
 import com.devhive03.Repository.UserDAORepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -51,8 +52,12 @@ public class SearchListService {
         }
     }
 
-
-    public void deleteBySearchData(String searchData) {
-        searchListDAORepository.deleteById(searchData);
+    @Transactional
+    public void deleteByUserIdAndSearchData(Long userId, String searchData) {
+        User user = userDAORepository.findById(userId).orElse(null); // Fetching the user
+        if (user != null) {
+            searchListDAORepository.deleteByUserAndSearchData(user, searchData);
+        }
     }
+
 }
