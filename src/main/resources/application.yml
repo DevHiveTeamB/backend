@@ -18,13 +18,13 @@ spring:
 #    mysql
 #    driverClassName: com.mysql.cj.jdbc.Driver
     driverClassName: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://127.0.0.1:3306/dev01
-    username: root
-    password: 1234
-#   url: jdbc:mysql://localhost:3306/springTest?useUnicode=true&characterEncoding=utf8&characterSetResults=utf8&serverTimezone=UTC
-    #url: jdbc:mariadb://svc.sel3.cloudtype.app:31951/dev01?useUnicode=true&characterEncoding=utf8&characterSetResults=utf8
-    #username: user
+    #url: jdbc:mariadb://127.0.0.1:3306/dev01
+    #username: root
     #password: 1234
+#   url: jdbc:mysql://localhost:3306/springTest?useUnicode=true&characterEncoding=utf8&characterSetResults=utf8&serverTimezone=UTC
+    url: jdbc:mariadb://svc.sel3.cloudtype.app:31951/dev01?useUnicode=true&characterEncoding=utf8&characterSetResults=utf8
+    username: user
+    password: 1234
 #    username: root
 #    password: Cks4257@
 
