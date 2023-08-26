@@ -6,6 +6,7 @@ import com.devhive03.Model.DAO.User;
 import com.devhive03.Model.DTO.CommunityPost.CommunityPostsDetailsResponseDTO;
 import com.devhive03.Model.DTO.CommunityPost.CommunityPostsRequestDTO;
 import com.devhive03.Model.DTO.CommunityPost.CommunityPostsResponseDTO;
+import com.devhive03.Repository.CommunityPostsDAORepository;
 import com.devhive03.Service.CommunityPostsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CommunityPostsController {
 
+    private final CommunityPostsDAORepository communityPostsDAORepository;
     private final CommunityPostsService communityPostsService;
 
     // Get Post by ID
@@ -33,6 +35,15 @@ public class CommunityPostsController {
 
         return communityPost.map(post -> ResponseEntity.ok(convertEntityToDetailsResponseDTO(post)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @Operation(summary = "커뮤니티 조회")
+    @GetMapping
+    public ResponseEntity<List<CommunityPostsResponseDTO>> getCommunityPosts() {
+        List<CommunityPosts> communityPosts = communityPostsDAORepository.findAll();
+        List<CommunityPostsResponseDTO> collect = communityPosts.stream().map(CommunityPostsResponseDTO::of).collect(Collectors.toList());
+
+        return ResponseEntity.ok(collect);
     }
 
 
