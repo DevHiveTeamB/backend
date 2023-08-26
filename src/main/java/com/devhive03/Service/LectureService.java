@@ -25,7 +25,7 @@ public class LectureService {
         lectureDAORepository.saveAll(lectures);
     }
 
-    public void readFromExcel(String filePath) {
+    public void readFromExcel(String filePath, String lecturename) {
         List<Lecture> lectures = new ArrayList<>();
         try (FileInputStream fis = new FileInputStream(filePath)) {
             Workbook workbook = WorkbookFactory.create(fis);
@@ -37,7 +37,7 @@ public class LectureService {
                 Lecture lecture = new Lecture();
                 lecture.setLectureName(row.getCell(0).getStringCellValue());
                 lecture.setProfessorName(row.getCell(1).getStringCellValue());
-                lecture.setMajor("컴퓨터공학과");
+                lecture.setMajor(lecturename);
                 lectures.add(lecture);
             }
         } catch (IOException e) {
