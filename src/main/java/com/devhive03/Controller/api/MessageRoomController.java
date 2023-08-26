@@ -7,6 +7,7 @@ import com.devhive03.Model.DAO.User;
 import com.devhive03.Model.DTO.Message.MessageRoomDTO;
 import com.devhive03.Model.DTO.Message.PrivateMessageDTO;
 import com.devhive03.Model.DTO.Message.UserMessageRoomResponse;
+import com.devhive03.Model.DTO.User.UserDTO;
 import com.devhive03.Repository.PostDAORepository;
 import com.devhive03.Service.MessageRoomService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,7 +19,9 @@ import org.springframework.web.bind.annotation.*;
 import com.devhive03.Repository.UserDAORepository;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Tag(name = "메시지룸", description = "메시지룸 API")
@@ -74,24 +77,58 @@ public class MessageRoomController {
 
     @Operation(summary = "메시지룸 생성", description = "메시지룸 생성")
     @PostMapping("/messagerooms/post") //프론트에서는 확인만하면되니까 굳이 DTO로 할 필요 X
-    public ResponseEntity<Long> createMessageRoom(
+    public ResponseEntity<Map<String,Object>> createMessageRoom(
             @RequestParam Long postId,
             @RequestParam Long buyerId
     ) {
-        // buyerId와 writerId를 사용하여 User 엔티티를 가져옵니다.
+        // buyerId와 postId를 사용하여 엔티티들을 가져옵니다.
         Post post = postDAORepository.findById(postId).orElse(null);
         User buyer = userDAORepository.findById(buyerId).orElse(null);
 
+        if (post != null && buyer != null) {
+            // 기존 메시지 룸을 찾습니다.
+            MessageRoom existingRoom = messageRoomService.findMessageRoom(post, buyer);
 
-        if (post.getWriter().getId() != null && buyer != null) {
-            MessageRoom messageRoom = messageRoomService.createMessageRoom(post, buyer);
-            if (messageRoom != null) {
-                Long roomID = messageRoom.getRoomID();
-                return ResponseEntity.ok(roomID);
+            if (existingRoom != null) {
+                // 기존 메시지 룸이 있으면 해당 룸을 반환합니다.
+                Long roomID = existingRoom.getRoomID();
+                Long postID = post.getPostId();
+                Long buyerID = buyer.getId();
+                String postTitle = post.getPostTitle();
+                Integer price = post.getPrice();
+
+                Map<String, Object> response = new HashMap<>();
+                response.put("roomID", roomID);
+                response.put("postID", postID);
+                response.put("buyerID", buyerID);
+                response.put("title", postTitle);
+                response.put("price", price);
+
+                return ResponseEntity.ok(response);
             } else {
-                return ResponseEntity.badRequest().body(null); // 실패 시 적절한 응답 반환
+                // 기존 메시지 룸이 없으면 새로운 룸을 생성합니다.
+                MessageRoom newRoom = messageRoomService.createMessageRoom(post, buyer);
+                if (newRoom != null) {
+                    Long roomID = newRoom.getRoomID();
+                    Long postID = post.getPostId();
+                    Long buyerID = buyer.getId();
+                    String postTitle = post.getPostTitle();
+                    Integer price = post.getPrice();
+
+                    Map<String, Object> response = new HashMap<>();
+                    response.put("roomID", roomID);
+                    response.put("postID", postID);
+                    response.put("buyerID", buyerID);
+                    response.put("title", postTitle);
+                    response.put("price", price);
+
+                    return ResponseEntity.ok(response);
+                } else {
+                    return ResponseEntity.badRequest().body(null);
+                }
             }
+        } else {
+            return ResponseEntity.badRequest().body(null);
         }
-        return null;
     }
 }
