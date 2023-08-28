@@ -97,6 +97,7 @@ public class PostController {
 
         return ResponseEntity.ok(postItemDTOS);
     }
+
     @Operation(summary = "게시글 생성", description = "이미지와 게시글 정보를 받아 게시글을 생성합니다.(swagger작동안됌)")
     @ApiResponse(responseCode = "200", description = "게시글 생성 성공")
     @ApiResponse(responseCode = "400", description = "게시글 생성 실패", content = @Content(examples = @ExampleObject(value = "{\n" +
