@@ -12,7 +12,6 @@ public class CommunityPostsDetailsResponseDTO {
     private String communityPostTitle;
     private String communityPostContent;
     private Timestamp communityPostDate;
-    private List<Picture> communityPostsPictures;  // Community Posts' pictures 정보를 추가
     private Long communityPostLikesCount;
     private Boolean isCommunityPostLikes;
     private List<Comment> comments;  // Comment 정보를 추가
@@ -25,17 +24,13 @@ public class CommunityPostsDetailsResponseDTO {
     }
 
     @Data
-    public static class Picture {
-        private Long communityPostsPictureID;
-        private String picture;
-    }
-
-    @Data
     public static class Comment {
         private Long commentsID;
         private User user;
         private String commentContent;
         private Timestamp commentDate;
+        private Boolean isLikes;
+        private Long Likes;
 
         @Data
         public static class User {

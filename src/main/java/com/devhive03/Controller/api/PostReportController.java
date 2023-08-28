@@ -5,12 +5,14 @@ import com.devhive03.Model.DTO.Report.PostReportResponseDTO;
 import com.devhive03.Service.PostReportService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "게시글 신고", description = "게시글 신고 API")
 @RestController
 @RequestMapping("/postreport")
 public class PostReportController {

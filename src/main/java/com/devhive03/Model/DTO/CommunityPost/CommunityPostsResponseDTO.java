@@ -15,7 +15,6 @@ public class CommunityPostsResponseDTO {
     private String communityPostContent;
     private Timestamp communityPostDate;
     private Long communityPostLikesCount;
-    private Boolean isCommunityPostLikes;
     private Long commentcount;
 
     @Data
@@ -23,25 +22,6 @@ public class CommunityPostsResponseDTO {
         private Long id;
         private String username;
         private String loginId;
-
-        public static Writer of(User user){
-            Writer writer = new Writer();
-            writer.setId(user.getId());
-            writer.setUsername(user.getUsername());
-            writer.setLoginId(user.getLoginId());
-            return writer;
-        }
     }
 
-    public static CommunityPostsResponseDTO of(CommunityPosts communityPosts){
-        CommunityPostsResponseDTO communityPostsResponseDTO = new CommunityPostsResponseDTO();
-        communityPostsResponseDTO.setCommunityPostID(communityPosts.getCommunityPostID());
-        communityPostsResponseDTO.setWriter(Writer.of(communityPosts.getWriter()));
-        communityPostsResponseDTO.setCommunityPostTitle(communityPosts.getCommunityPostTitle());
-        communityPostsResponseDTO.setCommunityPostContent(communityPosts.getCommunityPostContent());
-        communityPostsResponseDTO.setCommunityPostDate(communityPosts.getCommunityPostDate());
-        communityPostsResponseDTO.setCommunityPostLikesCount(communityPosts.getCommunityPostLikes());
-        communityPostsResponseDTO.setIsCommunityPostLikes(communityPosts.getIsCommunityPostLikes());
-        return communityPostsResponseDTO;
-    }
 }

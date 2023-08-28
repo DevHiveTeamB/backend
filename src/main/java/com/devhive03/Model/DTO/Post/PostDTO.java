@@ -41,6 +41,7 @@ public class PostDTO {
                 .favorite(post.getFavorites().size())
                 .postPictures(PostPictureDTO.ofList(post.getPostPictures()))
                 .isSale(post.getIsSale())
+                .isFavorite(false)
                 .build();
     }
 }
