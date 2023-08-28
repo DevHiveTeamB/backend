@@ -45,14 +45,12 @@ public class User {
     @Column(name = "introduction", columnDefinition = "TEXT")
     private String introduction;
 
-    @Column(name = "membership")
-    private Long membership = 0L;
+    @Column(name = "rating")
+    private Long rating = 0L;
 
-    @Column(name = "certification")
-    private Long certification = 0L;
+    @Column(name = "rating_user_cnt")
+    private Long ratingUserCnt = 0L;
 
-    @Column(name = "rating_state")
-    private Long ratingState =0L;
 
     //게시글 연관관계
     @OneToMany(mappedBy = "writer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -116,9 +114,7 @@ public class User {
         this.phoneNumber = userUpdateDTO.getPhoneNumber();
         this.profilePhoto = userUpdateDTO.getProfilePhoto();
         this.introduction = userUpdateDTO.getIntroduction();
-        this.membership = userUpdateDTO.getMembership();
-        this.certification = userUpdateDTO.getCertification();
-        this.ratingState = userUpdateDTO.getRatingState();
+        this.rating = userUpdateDTO.getRatingState();
         return this;
     }
 
