@@ -1,8 +1,11 @@
 package com.devhive03.Model.DAO;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Getter @Setter
 @Table(name = "comments_likes_list")
 public class CommentsLikesList {
 

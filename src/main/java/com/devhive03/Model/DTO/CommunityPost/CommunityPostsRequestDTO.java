@@ -8,5 +8,4 @@ public class CommunityPostsRequestDTO {
     private Long writerID;
     private String communityPostTitle;
     private String communityPostContent;
-    private Long communityPostLikes;
 }

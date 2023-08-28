@@ -34,12 +34,6 @@ public class CommunityPosts {
     @Column(name = "communitypost_date")
     private Timestamp communityPostDate = new java.sql.Timestamp(System.currentTimeMillis());;
 
-    @Column(name = "communitypost_likes")
-    private Long communityPostLikes = 0L;
-
-    @Column(name = "isCommunityPostLikes")
-    private Boolean isCommunityPostLikes = false;
-
     //커뮤니티 글 신고 연관관계
     @OneToMany(mappedBy = "communityPost")
     private List<CommunityPostReport> communityPostReports = new ArrayList<>();

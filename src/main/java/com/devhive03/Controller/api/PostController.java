@@ -59,7 +59,7 @@ public class PostController {
         //PostDTO로 변환
         PostDTO postDTO = PostDTO.of(post);
 
-        //userId가 null이 아니면 찜 null
+        //userId가 null이면  찜 null
         if (userId != null) {
             //찜 여부
             boolean isFavorite = post.getFavorites().stream().anyMatch(favorites -> favorites.getUser().getId().equals(userId));
@@ -78,7 +78,7 @@ public class PostController {
     @GetMapping(value = "/writer/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<PostItemDTO>> getAllPostBy(@PathVariable("userId") Long userID) {
 
-        List<Post> posts = postDAORepository.findAllByWriterId(userID);
+        List<Post> posts = postDAORepository.findAllByWriterIdAndNotOnSale(userID);
 
         List<PostItemDTO> postItemDTOS = posts.stream().map(PostItemDTO::of).collect(Collectors.toList());
 
