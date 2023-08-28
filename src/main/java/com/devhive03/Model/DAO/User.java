@@ -22,28 +22,28 @@ public class User {
     private Long id;
 
     @Column(name = "username", length = 50)
-    private String username;
+    private String username = "";
 
     @Column(name = "login_id", length = 50)
-    private String loginId;
+    private String loginId = "";
 
     @Column(name = "kakao_id", length = 50)
-    private Long kakaoId;
+    private Long kakaoId = 0L;
 
     @Column(name = "password", length = 256)
-    private String password;
+    private String password = "";
 
     @Column(name = "email", length = 100)
-    private String email;
+    private String email = "";
 
     @Column(name = "phone_number", length = 15)
-    private String phoneNumber;
+    private String phoneNumber = "";
 
     @Column(name = "profile_photo", columnDefinition = "TEXT")
-    private String profilePhoto;
+    private String profilePhoto = "";
 
     @Column(name = "introduction", columnDefinition = "TEXT")
-    private String introduction;
+    private String introduction = "";
 
     @Column(name = "rating")
     private Long rating = 0L;

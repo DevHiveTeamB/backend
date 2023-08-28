@@ -27,7 +27,7 @@ public class Comments {
     private CommunityPosts communityPosts;
 
     @Column(name = "comment_content")
-    private String commentContent;
+    private String commentContent = "";
 
     @Column(name = "comment_date")
     private Timestamp commentDate = new java.sql.Timestamp(System.currentTimeMillis());;

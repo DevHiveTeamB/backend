@@ -26,10 +26,10 @@ public class PrivateMessage {
     private User MessageWriter;
 
     @Column(name = "private_message_content")
-    private String privateMessageContent;
+    private String privateMessageContent = "";
 
     @Column(name = "private_message_content_date")
-    private Timestamp privateMessageContentDate = new java.sql.Timestamp(System.currentTimeMillis());;
+    private Timestamp privateMessageContentDate = new java.sql.Timestamp(System.currentTimeMillis());
 
 
 

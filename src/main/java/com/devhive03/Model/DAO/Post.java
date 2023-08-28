@@ -36,17 +36,17 @@ public class Post {
     private User writer;
 
     @Column(name = "post_title", nullable = false)
-    private String postTitle;
+    private String postTitle = "";
 
     @Lob
     @Column(name = "post_content", nullable = false)
-    private String postContent;
+    private String postContent = "";
 
     @Column(name = "post_date", nullable = false)
     private Timestamp postDate = new Timestamp(System.currentTimeMillis());
 
     @Column(name = "price", nullable = false)
-    private Integer price;
+    private Integer price = 0;
 
     @Column(name = "hits")
     private Integer hits = 0;

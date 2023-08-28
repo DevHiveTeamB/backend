@@ -18,7 +18,7 @@ public class SearchList {
     private Long id;
 
     @Column(name = "search_data")
-    private String searchData;
+    private String searchData = "";
 
     @ManyToOne
     @JoinColumn(name = "search_user_id", nullable = false)

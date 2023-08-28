@@ -25,20 +25,20 @@ public class CommunityPosts {
     private User writer;
 
     @Column(name = "communitypost_title")
-    private String communityPostTitle;
+    private String communityPostTitle = "";
 
     @Lob
     @Column(name = "communitypost_content")
-    private String communityPostContent;
+    private String communityPostContent = "";
 
     @Column(name = "communitypost_date")
     private Timestamp communityPostDate = new java.sql.Timestamp(System.currentTimeMillis());;
 
     @Column(name = "communitypost_likes")
-    private Long communityPostLikes;
+    private Long communityPostLikes = 0L;
 
     @Column(name = "isCommunityPostLikes")
-    private Boolean isCommunityPostLikes;
+    private Boolean isCommunityPostLikes = false;
 
     //커뮤니티 글 신고 연관관계
     @OneToMany(mappedBy = "communityPost")
