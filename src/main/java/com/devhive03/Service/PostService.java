@@ -54,5 +54,11 @@ public class PostService {
         postDAORepository.deleteById(id);
     }
 
+    public String TransactionCompleted(Long postId){
+        Optional<Post> post = postDAORepository.findPostId(postId);
+        post.get().setIsSale(true);
+        postDAORepository.save(post.get());
+        return "{\"message\":\"success\"}";
+    }
 
 }
