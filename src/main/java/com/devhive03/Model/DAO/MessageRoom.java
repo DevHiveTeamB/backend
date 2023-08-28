@@ -73,15 +73,26 @@ public class MessageRoom {
     }
     // Getters and Setters
 
-    public MessageRoomDTO toMessageRoomDTO() {
+    public MessageRoomDTO toMessageRoomDTO(Long userId) {
         MessageRoomDTO dto = new MessageRoomDTO();
         dto.setRoomID(this.roomID); // 이 부분은 정확한 필드가 무엇인지 모르기 때문에 예시로 작성했습니다. 실제 필드에 맞게 수정해야 합니다.
 
-        MessageRoomDTO.Buyer by = new MessageRoomDTO.Buyer();
-        by.setId(this.buyer.getId());
-        by.setUsername(this.buyer.getUsername());
-        by.setProfilePhoto(this.buyer.getProfilePhoto());
-        dto.setBuyer(by);
+        if(userId!=this.buyer.getId()) {
+            MessageRoomDTO.Opponent opponent = new MessageRoomDTO.Opponent();
+            opponent.setId(this.buyer.getId());
+            opponent.setUsername(this.buyer.getUsername());
+            opponent.setProfilePhoto(this.buyer.getProfilePhoto());
+            dto.setOpponent(opponent);
+        }
+        else {
+            MessageRoomDTO.Opponent wr = new MessageRoomDTO.Opponent();
+            wr.setId(this.post.getWriter().getId());
+            wr.setUsername(this.post.getWriter().getUsername());
+            wr.setProfilePhoto(this.post.getWriter().getProfilePhoto());
+            dto.setOpponent(wr);
+        }
+
+        dto.setPostid(this.post.getPostId());
 
         dto.setLastMessageData(this.lastMessageContent);
         dto.setLastMessageDate(this.lastMessageDate);

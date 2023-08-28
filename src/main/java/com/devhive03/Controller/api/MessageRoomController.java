@@ -6,8 +6,8 @@ import com.devhive03.Model.DAO.PrivateMessage;
 import com.devhive03.Model.DAO.User;
 import com.devhive03.Model.DTO.Message.MessageRoomDTO;
 import com.devhive03.Model.DTO.Message.PrivateMessageDTO;
-import com.devhive03.Model.DTO.Message.UserMessageRoomResponse;
-import com.devhive03.Model.DTO.User.UserDTO;
+import com.devhive03.Model.DTO.Message.PrivateMessageResponseDTO;
+import com.devhive03.Repository.MessageRoomDAORepository;
 import com.devhive03.Repository.PostDAORepository;
 import com.devhive03.Service.MessageRoomService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,10 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.devhive03.Repository.UserDAORepository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Tag(name = "메시지룸", description = "메시지룸 API")
@@ -30,35 +27,52 @@ import java.util.stream.Collectors;
 public class MessageRoomController {
 
     private final MessageRoomService messageRoomService;
+    private final MessageRoomDAORepository messageRoomDAORepository;
     private final UserDAORepository userDAORepository;
     private final PostDAORepository postDAORepository;
 
     @Autowired
-    public MessageRoomController(MessageRoomService messageRoomService, UserDAORepository userDAORepository, PostDAORepository postDAORepository) {
+    public MessageRoomController(MessageRoomService messageRoomService, UserDAORepository userDAORepository, PostDAORepository postDAORepository, MessageRoomDAORepository messageRoomDAORepository) {
         this.messageRoomService = messageRoomService;
         this.userDAORepository = userDAORepository;
         this.postDAORepository = postDAORepository;
+        this.messageRoomDAORepository = messageRoomDAORepository;
     }
 
     @Operation(summary = "유저 메시지룸 조회", description = "user에 속하는 메시지룸들 정보 조회")
     @GetMapping("messagerooms/user/get/{userId}")
-    public ResponseEntity<UserMessageRoomResponse> getMessageRoomsByUserId(@PathVariable Long userId) {
+    public ResponseEntity<List<MessageRoomDTO>> getMessageRoomsByUserId(@PathVariable Long userId) {
         List<MessageRoom> messageRooms = messageRoomService.getMessageRoomsByUserId(userId);
-        UserMessageRoomResponse userMessageRoomResponse = new UserMessageRoomResponse();
 
         List<MessageRoomDTO> messageRoomDTOS = messageRooms.stream()
-                .map(MessageRoom::toMessageRoomDTO)
+                .map(room -> room.toMessageRoomDTO(userId))
                 .collect(Collectors.toList());
 
-        userMessageRoomResponse.setUserID(userId);
-        userMessageRoomResponse.setMessageRoom(messageRoomDTOS);
-
-        return ResponseEntity.ok(userMessageRoomResponse);
+        return ResponseEntity.ok(messageRoomDTOS);
     }
 
     @Operation(summary = "메시지룸 조회", description = "메시지룸에 해당하는 모든 메시지 조회")
-    @GetMapping("/messages/{messageRoomId}")
-    public ResponseEntity<List<PrivateMessageDTO>> getMessagesByMessageRoomId(@PathVariable Long messageRoomId) {
+    @GetMapping("/messages/{messageRoomId}/{postId}/{opponentId}")
+    public ResponseEntity<PrivateMessageResponseDTO> getMessagesByMessageRoomId(
+            @PathVariable Long messageRoomId,
+            @PathVariable Long opponentId) {
+        PrivateMessageResponseDTO privateMessageResponseDTO = new PrivateMessageResponseDTO();
+
+        PrivateMessageResponseDTO.post postPMDTO = new PrivateMessageResponseDTO.post();
+        Optional<Post> post = postDAORepository.findPostId(messageRoomDAORepository.findById(messageRoomId).get().getRoomID());
+        postPMDTO.setPostid(post.get().getPostId());
+        postPMDTO.setPostname(post.get().getPostTitle());
+        postPMDTO.setPrice(post.get().getPrice());
+        postPMDTO.setPostUsername(post.get().getWriter().getUsername());
+
+        PrivateMessageResponseDTO.Opponent opponent = new PrivateMessageResponseDTO.Opponent();
+        Optional<User> user = userDAORepository.findById(opponentId);
+        opponent.setId(opponentId);
+        opponent.setUsername(user.get().getUsername());
+        opponent.setProfilePhoto(user.get().getProfilePhoto());
+        opponent.setRating(user.get().getRating());
+
+
         List<PrivateMessage> messages = messageRoomService.getMessagesByMessageRoomId(messageRoomId);
         List<PrivateMessageDTO> privateMessageDTOS = new ArrayList<>();
 
@@ -69,10 +83,20 @@ public class MessageRoomController {
             privateMessageDTO.setMessageWriterId(privateMessage.getMessageWriter().getId()); // User의 ID만 설정
             privateMessageDTO.setPrivateMessageContent(privateMessage.getPrivateMessageContent()); // 수정된 부분
 
+            if(opponentId==privateMessage.getMessageWriter().getId())
+                privateMessageDTO.setState("보낸");
+            else
+                privateMessageDTO.setState("받은");
+
             privateMessageDTOS.add(privateMessageDTO);
         }
 
-        return ResponseEntity.ok(privateMessageDTOS);
+
+        privateMessageResponseDTO.setPost(postPMDTO);
+        privateMessageResponseDTO.setOpponent(opponent);
+        privateMessageResponseDTO.setPrivateMessageDTOS(privateMessageDTOS);
+
+        return ResponseEntity.ok(privateMessageResponseDTO);
     }
 
     @Operation(summary = "메시지룸 생성", description = "메시지룸 생성")

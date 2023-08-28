@@ -9,15 +9,15 @@ import java.sql.Timestamp;
 @Getter @Setter
 public class MessageRoomDTO {
 
-    private Buyer buyer;
+    private Opponent opponent;
     private Long roomID;
     private String lastMessageData;
     private Timestamp lastMessageDate;
-
+    private Long postid;
 
     //... MessageRoom Class ...
     @Data
-    public static class Buyer {
+    public static class Opponent {
         private Long id;
         private String username;
         private String profilePhoto;
