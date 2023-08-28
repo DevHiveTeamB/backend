@@ -43,6 +43,7 @@ public class MessageRoom {
     @OneToMany(mappedBy = "messageRooms") //메시지룸안에 여러개의 메시지 존재
     private List<PrivateMessage> privateMessages = new ArrayList<>();
 
+
     public String getLastMessageContent() {
         if (!privateMessages.isEmpty()) {
             PrivateMessage lastMessage = privateMessages.get(privateMessages.size() - 1);
