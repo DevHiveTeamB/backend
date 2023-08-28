@@ -1,11 +1,14 @@
 package com.devhive03.Model.DAO;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.sql.Timestamp;
 import java.util.Date;
 
 @Entity
+@Getter @Setter
 @Table(name = "comments_reports")
 public class CommentsReports {
 
