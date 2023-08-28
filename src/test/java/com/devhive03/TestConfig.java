@@ -14,7 +14,7 @@ public class TestConfig {
     @Test
     public void testuserConfig(){
         User user = new User();
-        user.setUsername("우진");
+        user.setUsername("람운");
         userDAORepository.save(user);
     }
 }

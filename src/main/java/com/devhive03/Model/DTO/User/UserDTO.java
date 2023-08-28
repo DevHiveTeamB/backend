@@ -18,8 +18,6 @@ public class UserDTO {
     private String phoneNumber;
     private String profilePhoto;
     private String introduction;
-    private Long membership;
-    private Long certification;
     private Long ratingState;
 
     public static UserDTO of(User user) {
@@ -31,9 +29,7 @@ public class UserDTO {
             .phoneNumber(user.getPhoneNumber())
             .profilePhoto(user.getProfilePhoto())
             .introduction(user.getIntroduction())
-            .membership(user.getMembership())
-            .certification(user.getCertification())
-            .ratingState(user.getRatingState())
+            .ratingState(user.getRating())
             .build();
     }
 }
