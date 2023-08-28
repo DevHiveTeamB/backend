@@ -20,6 +20,7 @@ public class PostItemDTO {
     private String picture;
     private UserWriterDTO writer;
     private LectureDTO lecture;
+    private Boolean isSale;
 
     public static PostItemDTO of(Post post) {
         String picture = post.getPostPictures().isEmpty() ? null : post.getPostPictures().get(0).getPicture();
@@ -34,6 +35,7 @@ public class PostItemDTO {
                 .picture(picture)
                 .writer(UserWriterDTO.of(post.getWriter()))
                 .lecture(LectureDTO.of(post.getLecture()))
+                .isSale(post.getIsSale().equals(1))
                 .build();
     }
 }

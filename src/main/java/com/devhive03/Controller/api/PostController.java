@@ -78,8 +78,7 @@ public class PostController {
     @GetMapping(value = "/writer/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<PostItemDTO>> getAllPostBy(@PathVariable("userId") Long userID) {
 
-        List<Post> posts = postDAORepository.findAllByWriterIdAndNotOnSale(userID);
-
+        List<Post> posts = postDAORepository.findAllByWriterId(userID);
         List<PostItemDTO> postItemDTOS = posts.stream().map(PostItemDTO::of).collect(Collectors.toList());
 
         return ResponseEntity.ok(postItemDTOS);
