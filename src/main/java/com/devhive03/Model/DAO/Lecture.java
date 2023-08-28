@@ -20,13 +20,13 @@ public class Lecture {
     private Long lectureID;
 
     @Column(name = "lecture_name", nullable = false, length = 50)
-    private String lectureName;
+    private String lectureName = "";
 
     @Column(name = "professor_name", length = 50)
-    private String professorName;
+    private String professorName = "";
 
     @Column(name = "major", nullable = false, length = 50)
-    private String major;
+    private String major = "";
 
     //게시글 연관관계
     @OneToMany(mappedBy = "lecture")

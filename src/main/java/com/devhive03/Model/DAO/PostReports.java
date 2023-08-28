@@ -2,7 +2,7 @@ package com.devhive03.Model.DAO;
 
 import jakarta.persistence.*;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "post_reports")
@@ -22,10 +22,10 @@ public class PostReports {
     private Post post;
 
     @Column(name = "report_content")
-    private String reportContent;
+    private String reportContent = "";
 
     @Column(name = "report_date")
-    private Timestamp reportDate;
+    private Timestamp reportDate = new java.sql.Timestamp(System.currentTimeMillis());
 
     // Getters and Setters
 }

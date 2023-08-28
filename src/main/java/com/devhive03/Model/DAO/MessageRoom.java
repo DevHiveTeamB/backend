@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,10 +30,10 @@ public class MessageRoom {
     private Post post;
 
     @Column(name = "last_message")
-    private String lastMessageContent;
+    private String lastMessageContent = "";
 
     @Column(name = "last_message_date")
-    private Timestamp lastMessageDate;
+    private Timestamp lastMessageDate = new java.sql.Timestamp(System.currentTimeMillis());
 
     //쪽지방 신고 연관관계
     @OneToOne(mappedBy = "reportedMessageRooms", fetch = FetchType.LAZY)
