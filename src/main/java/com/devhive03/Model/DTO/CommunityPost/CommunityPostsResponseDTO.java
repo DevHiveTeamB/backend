@@ -16,7 +16,7 @@ public class CommunityPostsResponseDTO {
     private Timestamp communityPostDate;
     private Long communityPostLikesCount;
     private Boolean isCommunityPostLikes;
-    private List<Long> commentIDs;
+    private Long commentcount;
 
     @Data
     public static class Writer {

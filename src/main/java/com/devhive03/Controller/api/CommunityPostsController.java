@@ -41,7 +41,9 @@ public class CommunityPostsController {
     @GetMapping
     public ResponseEntity<List<CommunityPostsResponseDTO>> getCommunityPosts() {
         List<CommunityPosts> communityPosts = communityPostsDAORepository.findAll();
-        List<CommunityPostsResponseDTO> collect = communityPosts.stream().map(CommunityPostsResponseDTO::of).collect(Collectors.toList());
+        List<CommunityPostsResponseDTO> collect = communityPosts.stream()
+                .map(this::convertEntityToResponseDTO)
+                .collect(Collectors.toList());
 
         return ResponseEntity.ok(collect);
     }
@@ -115,7 +117,7 @@ public class CommunityPostsController {
         List<Long> commentIDs = communityPost.getComments().stream()
                 .map(Comments::getCommentsID)
                 .collect(Collectors.toList());
-        dto.setCommentIDs(commentIDs);
+        dto.setCommentcount(commentIDs.stream().count());
 
         return dto;
     }
