@@ -29,12 +29,12 @@ public class CommunityPostsController {
     // Get Post by ID
     @Operation(summary = "커뮤니티ID로 자세한 글내용 받기 + 댓글")
     @GetMapping("/get/{communityPostID}/{userId}")
-    public ResponseEntity<CommunityPostsDetailsResponseDTO> getCommunityPostById(@PathVariable Long communityPostID, @PathVariable Long userId) {
+    public ResponseEntity<CommunityPostsDetailsResponseDTO> getCommunityPostById(@PathVariable Long communityPostID, @RequestParam(required = false) Long userId) {
         return communityPostsService.getCommunityPost(communityPostID, userId);
     }
 
     // Get Posts by User ID
-    @Operation(summary = "유저ID로 글 리스트 받기")
+    @Operation(summary = "내가 쓴 글 리스트 받기")
     @GetMapping("/user/get/{userId}")
     public ResponseEntity<List<CommunityPostsResponseDTO>> getCommunityPostsByUserId(@PathVariable Long userId) {
         return ResponseEntity.ok(communityPostsService.getCommunityPostsByUser(userId));

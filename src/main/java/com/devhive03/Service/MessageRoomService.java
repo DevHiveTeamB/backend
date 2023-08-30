@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,21 +28,29 @@ public class MessageRoomService {
         // 유저 아이디로 쪽지방을 가져옵니다.
         List<MessageRoom> messageRooms = messageRoomRepository.findAllByBuyerIdOrPostWriterId(userId, userId);
 
-        // 각 쪽지방의 마지막 메시지를 가져오고, 이를 각 쪽지방에 추가합니다.
-        for (MessageRoom room : messageRooms) {
-            PrivateMessage lastMessage = getLastMessageInRoom(room.getId());
-            room.setLastMessage(lastMessage);
+        // 리스트를 안전하게 순회하기 위한 Iterator 객체 생성
+        Iterator<MessageRoom> iterator = messageRooms.iterator();
+
+        while (iterator.hasNext()) {
+            MessageRoom room = iterator.next();
+            Optional<PrivateMessage> lastMessage = getLastMessageInRoom(room.getId());
+            if(lastMessage.isEmpty()) {
+                // 조건에 맞는 객체를 리스트에서 제거
+                iterator.remove();
+            }
+            else {
+                room.setLastMessage(lastMessage.get());
+                room.setLastMessageDate(lastMessage.get().getPrivateMessageContentDate());
+            }
         }
 
         return messageRooms;
-
-
     }
 
-    public PrivateMessage getLastMessageInRoom(Long roomId) {
-        // roomId에 해당하는 쪽지방에서 가장 최근의 메시지를 찾는 쿼리를 작성
 
-        PrivateMessage lastMessage = privateMessageRepository.findFirstByMessageRoomsRoomIDOrderByPrivateMessageContentDateDesc(roomId);
+    public Optional<PrivateMessage> getLastMessageInRoom(Long roomId) {
+        // roomId에 해당하는 쪽지방에서 가장 최근의 메시지를 찾는 쿼리를 작성
+        Optional<PrivateMessage> lastMessage = privateMessageRepository.findFirstByMessageRoomsRoomIDOrderByPrivateMessageContentDateDesc(roomId);
         return lastMessage;
     }
 

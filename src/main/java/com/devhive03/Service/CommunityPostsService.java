@@ -36,26 +36,30 @@ public class CommunityPostsService {
     //자세한 내용 보내기
     public ResponseEntity<CommunityPostsDetailsResponseDTO> getCommunityPost(Long postid, Long userID) {
         Optional<CommunityPosts> communityPostOpt = communityPostsDAORepository.findById(postid);
-        Optional<User> userOpt = userDAORepository.findById(userID);
-
-        if(!communityPostOpt.isPresent() || !userOpt.isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-
         CommunityPosts communityPost = communityPostOpt.get();
-        User user = userOpt.get();
+        User user;
+        if(userID!=null) {
+            Optional<User> userOpt = userDAORepository.findById(userID);
+
+            if (!communityPostOpt.isPresent() || !userOpt.isPresent()) {
+                return ResponseEntity.notFound().build();
+            }
+            user = userOpt.get();
+        }
+        else{
+            user = null;
+        }
+        CommunityPostsDetailsResponseDTO responseDTO = convertEntityToDetailsResponseDTO(communityPost, user);
 
         // Check if the user has liked this post
         Boolean hasUserLikedPost = communityPostLikesListDAORepository
                 .findByLikedCommunityPostAndUser(communityPost, user)
                 .isPresent();
+        responseDTO.setIsCommunityPostLikes(hasUserLikedPost);
 
         // Get the count of likes for this post
         Long communityPostLikesCount = communityPostLikesListDAORepository
                 .countByLikedCommunityPost(communityPost);
-
-        CommunityPostsDetailsResponseDTO responseDTO = convertEntityToDetailsResponseDTO(communityPost, user);
-        responseDTO.setIsCommunityPostLikes(hasUserLikedPost);
         responseDTO.setCommunityPostLikesCount(communityPostLikesCount); // set the count here
 
         return ResponseEntity.ok(responseDTO);
@@ -96,7 +100,7 @@ public class CommunityPostsService {
         communityPostsDAORepository.save(communityPost);
 
         try {
-            return "{\"message\":\"CommunityPost created successfully\"}";
+            return String.format("{\"userID\":\"%d\"}", writerOpt.get().getId());
         } catch (Exception e) {
             throw new Exception("Error occurred while saving the CommunityPost", e);
         }
@@ -137,6 +141,7 @@ public class CommunityPostsService {
         writerDTO.setId(communityPost.getWriter().getId());
         writerDTO.setUsername(communityPost.getWriter().getUsername());
         writerDTO.setLoginId(communityPost.getWriter().getLoginId());
+        writerDTO.setProfilePhoto(communityPost.getWriter().getProfilePhoto());
         dto.setWriter(writerDTO);
 
         // Set Comments IDs
@@ -175,11 +180,16 @@ public class CommunityPostsService {
                     userDTO.setUsername(comment.getUser().getUsername());
                     userDTO.setLoginId(comment.getUser().getLoginId());
 
-
-                    // Check if the user has liked this post
-                    Boolean hasUserLikedPost = commentsLikesListDAORepository
-                            .findByCommentsAndUser(comment, user)
-                            .isPresent();
+                    Boolean hasUserLikedPost;
+                    if(user == null){
+                        hasUserLikedPost = false;
+                    }
+                    else {
+                        // Check if the user has liked this post
+                        hasUserLikedPost = commentsLikesListDAORepository
+                                .findByCommentsAndUser(comment, user)
+                                .isPresent();
+                    }
 
                     // Get the count of likes for this post
                     Long communityPostLikesCount = commentsLikesListDAORepository

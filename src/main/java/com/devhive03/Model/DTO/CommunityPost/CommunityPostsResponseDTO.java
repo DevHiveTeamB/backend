@@ -22,6 +22,7 @@ public class CommunityPostsResponseDTO {
         private Long id;
         private String username;
         private String loginId;
+        private String profilePhoto;
     }
 
 }
