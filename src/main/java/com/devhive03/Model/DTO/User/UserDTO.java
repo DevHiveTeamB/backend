@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -19,6 +21,7 @@ public class UserDTO {
     private String profilePhoto;
     private String introduction;
     private Long ratingState;
+    private Timestamp JoinDate;
 
     public static UserDTO of(User user) {
         return UserDTO.builder()
@@ -30,6 +33,7 @@ public class UserDTO {
             .profilePhoto(user.getProfilePhoto())
             .introduction(user.getIntroduction())
             .ratingState(user.getRating())
+            .JoinDate(user.getJoinDate())
             .build();
     }
 }

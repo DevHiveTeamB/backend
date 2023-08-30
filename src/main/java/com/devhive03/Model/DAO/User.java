@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +51,9 @@ public class User {
 
     @Column(name = "rating_user_cnt")
     private Long ratingUserCnt = 0L;
+
+    @Column(name = "join_date")
+    private Timestamp JoinDate = new Timestamp(System.currentTimeMillis());
 
 
     //게시글 연관관계

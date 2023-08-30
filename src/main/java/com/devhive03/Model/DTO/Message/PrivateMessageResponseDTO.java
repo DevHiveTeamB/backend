@@ -1,7 +1,9 @@
 package com.devhive03.Model.DTO.Message;
 
+import jakarta.persistence.Column;
 import lombok.Data;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Data
@@ -23,5 +25,7 @@ public class PrivateMessageResponseDTO {
         private String username;
         private String profilePhoto;
         private Long Rating;
+        private String introduction;
+        private Timestamp JoinDate;
     }
 }
