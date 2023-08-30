@@ -6,7 +6,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
+
 @Getter @Setter
 public class PrivateMessageDTO {
 
@@ -14,6 +15,7 @@ public class PrivateMessageDTO {
     private Long messageWriterId; // User의 ID만 저장
     private String state;
     private String privateMessageContent;
+    private Timestamp privateMessageDate;
     //private Timestamp privateMessageContentDate; // 주석 처리한 부분은 필요에 따라 사용
 
 }

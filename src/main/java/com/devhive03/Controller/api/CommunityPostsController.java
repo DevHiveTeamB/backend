@@ -28,7 +28,7 @@ public class CommunityPostsController {
 
     // Get Post by ID
     @Operation(summary = "커뮤니티ID로 자세한 글내용 받기 + 댓글")
-    @GetMapping("/get/{communityPostID}/{userId}")
+    @GetMapping("/get/{communityPostID}")
     public ResponseEntity<CommunityPostsDetailsResponseDTO> getCommunityPostById(@PathVariable Long communityPostID, @RequestParam(required = false) Long userId) {
         return communityPostsService.getCommunityPost(communityPostID, userId);
     }
