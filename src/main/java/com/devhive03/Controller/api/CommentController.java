@@ -27,7 +27,7 @@ public class CommentController {
     private CommentService commentService;
 
     @Operation(summary = "댓글 작성")
-    @PostMapping("/post/{CommentsID}")
+    @PostMapping("/post")
     public String createCommentPost(@RequestBody CommentDTO comment) {
         Comments savedComment = commentService.createComment(comment);
         return "{\"message\":\"success\"}";

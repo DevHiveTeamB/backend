@@ -25,7 +25,6 @@ public class PrivateMessageService {
         privateMessage.setMessageRoom(messageRoom);
         privateMessage.setMessageWriter(messageWriter);
         privateMessage.setPrivateMessageContent(content);
-        //privateMessage.setPrivateMessageContentDate(new Timestamp(System.currentTimeMillis()));
 
         // 개인 쪽지 저장
         return privateMessageRepository.save(privateMessage);

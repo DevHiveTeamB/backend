@@ -33,7 +33,7 @@ public class MessageRoom {
     private String lastMessageContent = "";
 
     @Column(name = "last_message_date")
-    private Timestamp lastMessageDate = new java.sql.Timestamp(System.currentTimeMillis());
+    private Timestamp lastMessageDate;
 
     //쪽지방 신고 연관관계
     @OneToOne(mappedBy = "reportedMessageRooms", fetch = FetchType.LAZY)

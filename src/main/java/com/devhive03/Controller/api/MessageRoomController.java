@@ -39,7 +39,7 @@ public class MessageRoomController {
         this.messageRoomDAORepository = messageRoomDAORepository;
     }
 
-    @Operation(summary = "유저 메시지룸 조회", description = "user에 속하는 메시지룸들 정보 조회")
+    @Operation(summary = "해당 유저의 메시지룸 리스트 조회", description = "user에 속하는 메시지룸들 정보 조회")
     @GetMapping("messagerooms/user/get/{userId}")
     public ResponseEntity<List<MessageRoomDTO>> getMessageRoomsByUserId(@PathVariable Long userId) {
         List<MessageRoom> messageRooms = messageRoomService.getMessageRoomsByUserId(userId);
@@ -51,19 +51,19 @@ public class MessageRoomController {
         return ResponseEntity.ok(messageRoomDTOS);
     }
 
-    @Operation(summary = "메시지룸 조회", description = "메시지룸에 해당하는 모든 메시지 조회")
-    @GetMapping("/messages/{messageRoomId}/{postId}/{opponentId}")
+    @Operation(summary = "해당 메시지룸과 쪽지들 조회", description = "메시지룸에 해당하는 모든 메시지 조회")
+    @GetMapping("/messages/{messageRoomId}/{opponentId}")
     public ResponseEntity<PrivateMessageResponseDTO> getMessagesByMessageRoomId(
             @PathVariable Long messageRoomId,
             @PathVariable Long opponentId) {
         PrivateMessageResponseDTO privateMessageResponseDTO = new PrivateMessageResponseDTO();
 
         PrivateMessageResponseDTO.post postPMDTO = new PrivateMessageResponseDTO.post();
-        Optional<Post> post = postDAORepository.findPostId(messageRoomDAORepository.findById(messageRoomId).get().getRoomID());
-        postPMDTO.setPostid(post.get().getPostId());
-        postPMDTO.setPostname(post.get().getPostTitle());
-        postPMDTO.setPrice(post.get().getPrice());
-        postPMDTO.setPostUsername(post.get().getWriter().getUsername());
+        Post post = messageRoomDAORepository.findById(messageRoomId).get().getPost();
+        postPMDTO.setPostid(post.getPostId());
+        postPMDTO.setPostname(post.getPostTitle());
+        postPMDTO.setPrice(post.getPrice());
+        postPMDTO.setPostUsername(post.getWriter().getUsername());
 
         PrivateMessageResponseDTO.Opponent opponent = new PrivateMessageResponseDTO.Opponent();
         Optional<User> user = userDAORepository.findById(opponentId);
