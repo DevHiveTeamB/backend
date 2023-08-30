@@ -33,14 +33,7 @@ public class PrivateMessage {
 
 
 
-    public void setPrivateMessageContent(String privateMessageContent) {
-        this.privateMessageContent = privateMessageContent;
-    }
 
-    public void setMessageRoom(MessageRoom messageRooms) {
-
-        this.messageRooms = messageRooms;
-    }
 
 
     // Getters and Setters

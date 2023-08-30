@@ -21,14 +21,14 @@ public class CommentsLikesListController {
     //좋아요 생성
     @Operation(summary = "좋아요 생성")
     @PostMapping("/post")
-    public String createcommentsLikesList(@Parameter Long userID, @Parameter Long postID) {
-        return commentsLikesListService.createcommentsLikesList(userID, postID);
+    public String createcommentsLikesList(@Parameter Long userID, @Parameter Long commentId) {
+        return commentsLikesListService.createcommentsLikesList(userID, commentId);
     }
 
     //좋아요 삭제
     @Operation(summary = "좋아요 삭제")
     @DeleteMapping("/delete")
-    public String deletecommentsLikesList(@Parameter Long userID, @Parameter Long postID) {
-        return commentsLikesListService.deletecommentsLikesList(userID, postID);
+    public String deletecommentsLikesList(@Parameter Long userID, @Parameter Long commentId) {
+        return commentsLikesListService.deletecommentsLikesList(userID, commentId);
     }
 }

@@ -60,7 +60,6 @@ public class CommunityPostsController {
         return communityPostsService.createCommunityPost(communityPostRequest);
     }
 
-
     // Delete a Post
     @Operation(summary = "커뮤니티 글 삭제")
     @DeleteMapping("/delete/{communityPostID}")

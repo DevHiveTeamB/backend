@@ -44,18 +44,6 @@ public class MessageRoom {
     private List<PrivateMessage> privateMessages = new ArrayList<>();
 
 
-    public String getLastMessageContent() {
-        if (!privateMessages.isEmpty()) {
-            PrivateMessage lastMessage = privateMessages.get(privateMessages.size() - 1);
-            return lastMessage.getPrivateMessageContent();
-        } else {
-            return "No message available";
-        }
-    }
-
-    public Long getId() {
-        return roomID;
-    }
     public void setLastMessage(PrivateMessage lastMessage) {
          if (lastMessage != null) {
             this.lastMessageContent = lastMessage.getPrivateMessageContent();
@@ -64,14 +52,6 @@ public class MessageRoom {
         }
     }
 
-    public List<PrivateMessage> getPrivateMessages() {
-        return privateMessages;
-    }
-
-    public void setPrivateMessages(List<PrivateMessage> privateMessages) {
-        this.privateMessages = privateMessages;
-    }
-    // Getters and Setters
 
     public MessageRoomDTO toMessageRoomDTO(Long userId) {
         MessageRoomDTO dto = new MessageRoomDTO();
