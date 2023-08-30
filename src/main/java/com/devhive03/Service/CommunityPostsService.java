@@ -167,6 +167,7 @@ public class CommunityPostsService {
         writerDTO.setId(communityPost.getWriter().getId());
         writerDTO.setUsername(communityPost.getWriter().getUsername());
         writerDTO.setLoginId(communityPost.getWriter().getLoginId());
+        writerDTO.setProfilePhoto(communityPost.getWriter().getProfilePhoto());
         dto.setWriter(writerDTO);
 
         // Set Comments
@@ -179,6 +180,7 @@ public class CommunityPostsService {
                     userDTO.setId(comment.getUser().getId());
                     userDTO.setUsername(comment.getUser().getUsername());
                     userDTO.setLoginId(comment.getUser().getLoginId());
+                    userDTO.setProfilePhoto(comment.getUser().getProfilePhoto());
 
                     Boolean hasUserLikedPost;
                     if(user == null){

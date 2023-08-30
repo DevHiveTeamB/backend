@@ -21,6 +21,7 @@ public class CommunityPostsDetailsResponseDTO {
         private Long id;
         private String username;
         private String loginId;
+        private String profilePhoto;
     }
 
     @Data
@@ -37,6 +38,7 @@ public class CommunityPostsDetailsResponseDTO {
             private Long id;
             private String username;
             private String loginId;
+            private String profilePhoto;
         }
     }
 }

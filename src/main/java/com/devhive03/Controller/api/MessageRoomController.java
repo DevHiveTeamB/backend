@@ -82,6 +82,7 @@ public class MessageRoomController {
             privateMessageDTO.setMessageID(privateMessage.getMessageID());
             privateMessageDTO.setMessageWriterId(privateMessage.getMessageWriter().getId()); // User의 ID만 설정
             privateMessageDTO.setPrivateMessageContent(privateMessage.getPrivateMessageContent()); // 수정된 부분
+            privateMessageDTO.setPrivateMessageDate(privateMessage.getPrivateMessageContentDate());
 
             if(opponentId==privateMessage.getMessageWriter().getId())
                 privateMessageDTO.setState("받은");
