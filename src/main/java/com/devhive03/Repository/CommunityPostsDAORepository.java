@@ -6,5 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface CommunityPostsDAORepository extends JpaRepository<CommunityPosts, Long> {
-    List<CommunityPosts> findAllByWriterId(Long writerId);
+    List<CommunityPosts> findAllByWriterIdOrderByCommunityPostDateDesc(Long writerId);
+    List<CommunityPosts> findAllByOrderByCommunityPostDateDesc();
 }

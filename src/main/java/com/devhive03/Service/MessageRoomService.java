@@ -33,7 +33,7 @@ public class MessageRoomService {
 
         while (iterator.hasNext()) {
             MessageRoom room = iterator.next();
-            Optional<PrivateMessage> lastMessage = getLastMessageInRoom(room.getId());
+            Optional<PrivateMessage> lastMessage = getLastMessageInRoom(room.getRoomID());
             if(lastMessage.isEmpty()) {
                 // 조건에 맞는 객체를 리스트에서 제거
                 iterator.remove();
@@ -55,16 +55,7 @@ public class MessageRoomService {
     }
 
     public List<PrivateMessage> getMessagesByMessageRoomId(Long messageRoomId) {
-        // MessageRoomDAORepository에서 해당 메시지 룸을 조회합니다.
-        Optional<MessageRoom> messageRoomOptional = messageRoomRepository.findById(messageRoomId);
-
-        if (messageRoomOptional.isPresent()) {
-            MessageRoom messageRoom = messageRoomOptional.get();
-            return messageRoom.getPrivateMessages();
-        } else {
-            // 메시지 룸이 존재하지 않을 경우 빈 리스트 반환 또는 예외 처리
-            return Collections.emptyList(); // 빈 리스트 반환
-        }
+        return privateMessageRepository.findAllByMessageRoomsRoomIDOrderByPrivateMessageContentDateAsc(messageRoomId);
     }
 
     public MessageRoom findMessageRoom(Post post, User buyer) {

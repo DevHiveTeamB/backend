@@ -69,7 +69,7 @@ public class CommunityPostsService {
 
     // Read by User ID
     public List<CommunityPostsResponseDTO> getCommunityPostsByUser(Long userId) {
-        List<CommunityPosts> communityPosts = communityPostsDAORepository.findAllByWriterId(userId);
+        List<CommunityPosts> communityPosts = communityPostsDAORepository.findAllByWriterIdOrderByCommunityPostDateDesc(userId);
         return communityPosts.stream()
                 .map(this::convertEntityToResponseDTO)
                 .collect(Collectors.toList());
@@ -77,7 +77,7 @@ public class CommunityPostsService {
 
     // Read All
     public List<CommunityPostsResponseDTO> getAllCommunityPosts() {
-        List<CommunityPosts> communityPosts = communityPostsDAORepository.findAll();
+        List<CommunityPosts> communityPosts = communityPostsDAORepository.findAllByOrderByCommunityPostDateDesc();
         List<CommunityPostsResponseDTO> collect = communityPosts.stream()
                 .map(this::convertEntityToResponseDTO)
                 .collect(Collectors.toList());
@@ -100,7 +100,7 @@ public class CommunityPostsService {
         communityPostsDAORepository.save(communityPost);
 
         try {
-            return String.format("{\"userID\":\"%d\"}", writerOpt.get().getId());
+            return String.format("{\n  \"userID\":\"%d\", \n  \"CommunityPostID\":\"%d\"\n}", writerOpt.get().getId(), communityPost.getCommunityPostID());
         } catch (Exception e) {
             throw new Exception("Error occurred while saving the CommunityPost", e);
         }

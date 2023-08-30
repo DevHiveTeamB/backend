@@ -22,7 +22,7 @@ public class PrivateMessageService {
     public PrivateMessage sendPrivateMessage(MessageRoom messageRoom, User messageWriter, String content) {
         // 개인 쪽지 객체 생성 및 필드 설정
         PrivateMessage privateMessage = new PrivateMessage();
-        privateMessage.setMessageRoom(messageRoom);
+        privateMessage.setMessageRooms(messageRoom);
         privateMessage.setMessageWriter(messageWriter);
         privateMessage.setPrivateMessageContent(content);
 
