@@ -25,7 +25,7 @@ public class SearchList {
     private User user;
 
     @Column(name = "search_date")
-    private Timestamp searchDate = new Timestamp(System.currentTimeMillis());;
+    private Timestamp searchDate = new Timestamp(System.currentTimeMillis());
 
     // Getters and Setters
 }

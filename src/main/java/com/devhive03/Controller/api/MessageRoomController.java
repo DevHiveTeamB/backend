@@ -71,6 +71,8 @@ public class MessageRoomController {
         opponent.setUsername(user.get().getUsername());
         opponent.setProfilePhoto(user.get().getProfilePhoto());
         opponent.setRating(user.get().getRating());
+        opponent.setIntroduction(user.get().getIntroduction());
+        opponent.setJoinDate(user.get().getJoinDate());
 
 
         List<PrivateMessage> messages = messageRoomService.getMessagesByMessageRoomId(messageRoomId);
