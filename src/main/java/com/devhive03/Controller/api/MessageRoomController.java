@@ -84,9 +84,9 @@ public class MessageRoomController {
             privateMessageDTO.setPrivateMessageContent(privateMessage.getPrivateMessageContent()); // 수정된 부분
 
             if(opponentId==privateMessage.getMessageWriter().getId())
-                privateMessageDTO.setState("보낸");
-            else
                 privateMessageDTO.setState("받은");
+            else
+                privateMessageDTO.setState("보낸");
 
             privateMessageDTOS.add(privateMessageDTO);
         }
