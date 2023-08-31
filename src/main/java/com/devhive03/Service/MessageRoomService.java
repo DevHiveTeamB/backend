@@ -50,7 +50,7 @@ public class MessageRoomService {
 
     public Optional<PrivateMessage> getLastMessageInRoom(Long roomId) {
         // roomId에 해당하는 쪽지방에서 가장 최근의 메시지를 찾는 쿼리를 작성
-        Optional<PrivateMessage> lastMessage = privateMessageRepository.findFirstByMessageRoomsRoomIDOrderByPrivateMessageContentDateDesc(roomId);
+        Optional<PrivateMessage> lastMessage = privateMessageRepository.findFirstByMessageRoomsRoomIDOrderByPrivateMessageContentDateAsc(roomId);
         return lastMessage;
     }
 
