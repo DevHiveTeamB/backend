@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface MessageRoomDAORepository extends JpaRepository<MessageRoom, Long> {
-    List<MessageRoom> findAllByBuyerIdOrPostWriterId(Long userId, Long userId1);
+    List<MessageRoom> findAllByBuyerIdOrPost_WriterIdOrderByLastMessageDateDesc(Long userId, Long userId1);
 
     MessageRoom findByPostAndBuyer(Post post, User buyer);
 }

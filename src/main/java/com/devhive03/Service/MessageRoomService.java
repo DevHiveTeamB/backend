@@ -26,7 +26,7 @@ public class MessageRoomService {
 
     public List<MessageRoom> getMessageRoomsByUserId(Long userId) {
         // 유저 아이디로 쪽지방을 가져옵니다.
-        List<MessageRoom> messageRooms = messageRoomRepository.findAllByBuyerIdOrPostWriterId(userId, userId);
+        List<MessageRoom> messageRooms = messageRoomRepository.findAllByBuyerIdOrPost_WriterIdOrderByLastMessageDateDesc(userId, userId);
 
         // 리스트를 안전하게 순회하기 위한 Iterator 객체 생성
         Iterator<MessageRoom> iterator = messageRooms.iterator();
@@ -50,12 +50,12 @@ public class MessageRoomService {
 
     public Optional<PrivateMessage> getLastMessageInRoom(Long roomId) {
         // roomId에 해당하는 쪽지방에서 가장 최근의 메시지를 찾는 쿼리를 작성
-        Optional<PrivateMessage> lastMessage = privateMessageRepository.findFirstByMessageRoomsRoomIDOrderByPrivateMessageContentDateAsc(roomId);
+        Optional<PrivateMessage> lastMessage = privateMessageRepository.findFirstByMessageRoomsRoomIDOrderByPrivateMessageContentDateDesc(roomId);
         return lastMessage;
     }
 
     public List<PrivateMessage> getMessagesByMessageRoomId(Long messageRoomId) {
-        return privateMessageRepository.findAllByMessageRoomsRoomIDOrderByPrivateMessageContentDateAsc(messageRoomId);
+        return privateMessageRepository.findAllByMessageRoomsRoomIDOrderByPrivateMessageContentDateDesc(messageRoomId);
     }
 
     public MessageRoom findMessageRoom(Post post, User buyer) {
