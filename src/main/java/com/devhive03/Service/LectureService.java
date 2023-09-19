@@ -50,7 +50,7 @@ public class LectureService {
             Workbook workbook = WorkbookFactory.create(fis);
             Sheet sheet = workbook.getSheetAt(0);
             for (Row row : sheet) {
-                if(row.getCell(0).getStringCellValue()==""){
+                if(row.getCell(0).getStringCellValue()==""){ //수정필요 문자열 비교
                     break;
                 }
                 Lecture lecture = new Lecture();
